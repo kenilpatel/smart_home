@@ -200,7 +200,7 @@ class forget_page_state extends State<forget_page>
                 new Padding(padding:EdgeInsets.all(40)),
                 new SizedBox(
                     child:InkWell(
-                      child: Text("Back to login",style:TextStyle(color:Colors.white,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold,decoration: TextDecoration.underline),),
+                      child: Text("Back",style:TextStyle(color:Colors.white,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold,decoration: TextDecoration.underline),),
                       onTap:back_login,
                     )
 
