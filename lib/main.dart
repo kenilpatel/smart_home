@@ -30,13 +30,10 @@ class login extends StatefulWidget
   }
 }
 class loginstate extends State<login> {
-  
-
-  void login()
+  void forget_method()
   {
-    Fluttertoast.showToast(msg: "Login successfully",toastLength: Toast.LENGTH_SHORT);
+    Navigator.push(context,MaterialPageRoute(builder: (context)=>forget()));
   }
-
   Widget build(BuildContext bc)
   {
     return Scaffold(
@@ -93,15 +90,24 @@ class loginstate extends State<login> {
 
                           ),
                         ),
-                        new Padding(padding:EdgeInsets.all(35)),
+                        new Padding(padding:EdgeInsets.all(20)),
                         new SizedBox(
+                          width: 300,
                           child:  new MaterialButton(
                             padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
                             child: Text("Login",style:TextStyle(color:Colors.black,fontSize:40,fontFamily: 'po',fontWeight: FontWeight.bold),),
                             shape: new CircleBorder(),
                             color: Colors.white,
-                            onPressed:login,
+                            onPressed:()=>{},
                           ),
+                        ),
+                        new Padding(padding:EdgeInsets.all(10)),
+                        new SizedBox(
+                          child:InkWell(
+                              child: Text("Forget your login details ? Get help signing in",style:TextStyle(color:Colors.white,fontSize:15,fontFamily: 'po',fontWeight: FontWeight.bold,decoration: TextDecoration.underline),),
+                              onTap: forget_method,
+                           )
+
                         )
                       ],
                     ),
@@ -111,6 +117,98 @@ class loginstate extends State<login> {
 
         ],
       )
+
+    );
+  }
+}
+class forget extends StatelessWidget
+{
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      theme: ThemeData.light(),
+      home: new Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: new forget_page(),
+
+      ),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+class forget_page extends StatefulWidget
+{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return forget_page_state();
+  }
+}
+class forget_page_state extends State<forget_page>
+{
+  void back_login()
+  {
+    Navigator.push(context,MaterialPageRoute(builder: (context)=>app()));
+  }
+  @override
+  Widget build(BuildContext context)
+  {
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: new Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            new Image(
+              image: new AssetImage("assets/main.jpg"),
+              fit: BoxFit.fitHeight,
+              color: Color(0000000).withOpacity(0.90),
+              colorBlendMode: BlendMode.darken,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text("Forget Password",style:TextStyle(color:Colors.white,fontSize:50,fontFamily: 'po',fontWeight: FontWeight.bold)),
+                new Padding(padding:EdgeInsets.all(40)),
+                new SizedBox(
+                  width: 300,
+                  child:new TextField(
+                    textAlign: TextAlign.center,
+                    decoration: new InputDecoration(
+                        border: InputBorder.none,
+//                                icon:Icon(Icons.account_box,color: Colors.white,),
+                        prefixIcon: Icon(Icons.email,color: Colors.white,),
+                        hintText: "Enter Recovery email",
+                        hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+
+                  ),
+                ),
+                new Padding(padding:EdgeInsets.all(20)),
+                new SizedBox(
+                  width: 150,
+                  child:  new MaterialButton(
+//                    child: Icon(Icons.send,size:50,color: Colors.white,),
+                    padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
+                    child: Text("Send",style:TextStyle(color:Colors.black,fontSize:40,fontFamily: 'po',fontWeight: FontWeight.bold),),
+                    shape: new CircleBorder(),
+                    color: Colors.white,
+                    onPressed:()=>{},
+                  ),
+                ),
+                new Padding(padding:EdgeInsets.all(40)),
+                new SizedBox(
+                    child:InkWell(
+                      child: Text("Back to login",style:TextStyle(color:Colors.white,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold,decoration: TextDecoration.underline),),
+                      onTap:back_login,
+                    )
+
+                )
+              ],
+            )
+          ],
+        )
 
     );
   }
