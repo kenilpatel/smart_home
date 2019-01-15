@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
 void main()
 {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -21,6 +22,18 @@ class app extends StatelessWidget
     );
   }
 }
+class forgetpageroute extends CupertinoPageRoute {
+  forgetpageroute()
+      : super(builder: (BuildContext context) => new forget());
+
+
+  // OPTIONAL IF YOU WISH TO HAVE SOME EXTRA ANIMATION WHILE ROUTING
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new forget());
+  }
+}
 class login extends StatefulWidget
 {
   @override
@@ -29,10 +42,11 @@ class login extends StatefulWidget
     return new loginstate();
   }
 }
+
 class loginstate extends State<login> {
   void forget_method()
   {
-    Navigator.push(context,MaterialPageRoute(builder: (context)=>forget()));
+    Navigator.of(context).push(new forgetpageroute());
   }
   Widget build(BuildContext bc)
   {
@@ -104,7 +118,7 @@ class loginstate extends State<login> {
                         new Padding(padding:EdgeInsets.all(10)),
                         new SizedBox(
                           child:InkWell(
-                              child: Text("Forget your login details ? Get help signing in",style:TextStyle(color:Colors.white,fontSize:15,fontFamily: 'po',fontWeight: FontWeight.bold,decoration: TextDecoration.underline),),
+                              child: Text("Forget your login details ? Get help signing in",style:TextStyle(color:Colors.white,fontSize:18,fontFamily: 'po',fontWeight: FontWeight.bold,decoration: TextDecoration.underline),),
                               onTap: forget_method,
                            )
 
@@ -119,6 +133,18 @@ class loginstate extends State<login> {
       )
 
     );
+  }
+}
+class loginpageroute extends CupertinoPageRoute {
+  loginpageroute()
+      : super(builder: (BuildContext context) => new app());
+
+
+  // OPTIONAL IF YOU WISH TO HAVE SOME EXTRA ANIMATION WHILE ROUTING
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new app());
   }
 }
 class forget extends StatelessWidget
@@ -148,7 +174,7 @@ class forget_page_state extends State<forget_page>
 {
   void back_login()
   {
-    Navigator.push(context,MaterialPageRoute(builder: (context)=>app()));
+    Navigator.of(context).push(new loginpageroute());
   }
   @override
   Widget build(BuildContext context)
