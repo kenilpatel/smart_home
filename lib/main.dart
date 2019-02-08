@@ -77,8 +77,6 @@ class forgetpageroute extends CupertinoPageRoute {
   forgetpageroute()
       : super(builder: (BuildContext context) => new forget());
 
-
-  // OPTIONAL IF YOU WISH TO HAVE SOME EXTRA ANIMATION WHILE ROUTING
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
@@ -310,9 +308,59 @@ class home extends StatelessWidget {
     );
   }
 }
+class  MyHomePageroute extends CupertinoPageRoute {
+  MyHomePageroute()
+      : super(builder: (BuildContext context) => new MyHomePage());
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new MyHomePage());
+  }
+}
+class  hardwareroute extends CupertinoPageRoute {
+  hardwareroute()
+      : super(builder: (BuildContext context) => new hardware());
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new hardware());
+  }
+}
+class  smartmoderoute extends CupertinoPageRoute {
+  smartmoderoute()
+      : super(builder: (BuildContext context) => new smartmode());
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new smartmode());
+  }
+}
+class  weatherroute extends CupertinoPageRoute {
+  weatherroute()
+      : super(builder: (BuildContext context) => new weather());
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new weather());
+  }
+}
+class  configroute extends CupertinoPageRoute {
+  configroute()
+      : super(builder: (BuildContext context) => new config());
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new config());
+  }
+}
 void switch_modetap(BuildContext context)
 {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+  Navigator.of(context).push(new MyHomePageroute());
 }
 void hardwaretap(BuildContext context)
 {
@@ -320,7 +368,7 @@ void hardwaretap(BuildContext context)
   Future.delayed(const Duration(milliseconds:700), () {
     if(mode=="1")
     {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => hardware()));
+      Navigator.of(context).push(new hardwareroute());
     }
     else {
       Fluttertoast.showToast(
@@ -328,7 +376,7 @@ void hardwaretap(BuildContext context)
         toastLength: Toast.LENGTH_LONG,
 
       );
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+      Navigator.of(context).push(new MyHomePageroute());
     }
 
   });
@@ -338,7 +386,7 @@ void smartmodetap(BuildContext context)
   Future.delayed(const Duration(milliseconds:700), () {
     if(mode=="1")
     {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => smartmode()));
+      Navigator.of(context).push(new smartmoderoute());
     }
     else {
       Fluttertoast.showToast(
@@ -346,20 +394,18 @@ void smartmodetap(BuildContext context)
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIos: 1
       );
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+      Navigator.of(context).push(new MyHomePageroute());
     }
 
   });
 }
 void  weathertap(BuildContext context)
 {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => weather()));
+  Navigator.of(context).push(new weatherroute());
 }
 void configtap(BuildContext context)
 {
-  Future.delayed(const Duration(milliseconds:700), () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => config()));
-  });
+  Navigator.of(context).push(new configroute());
 }
 class MyHomePage extends StatefulWidget {
 
@@ -755,7 +801,7 @@ class configpage extends State<config> {
                 fit: BoxFit.fitHeight,
                 color: Color(0000000).withOpacity(0.90),
                 colorBlendMode: BlendMode.darken,),
-              new changeip()
+                new changeip()
 
 
             ]
@@ -918,7 +964,6 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
     Fluttertoast.showToast(msg: "Ip successfull changed to "+ip,toastLength: Toast.LENGTH_LONG);
     setState((){lip=ip;});
   }
-
   Widget build(BuildContext context) {
     // TODO: implement build
     return Column(
@@ -1292,19 +1337,27 @@ class device_page_widget  extends StatelessWidget
 
   }
 }
+class device_page_widgetroute extends CupertinoPageRoute {
+  String data;
+  device_page_widgetroute(this.data)
+      : super(builder: (BuildContext context) => new device_page_widget(data));
+
+
+  // OPTIONAL IF YOU WISH TO HAVE SOME EXTRA ANIMATION WHILE ROUTING
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new device_page_widget(data));
+  }
+}
 void fan_page(BuildContext c)
 {
-  Navigator.push(
-    c,
-    MaterialPageRoute(builder: (c) => device_page_widget("fan")),
-  );
+
+  Navigator.of(c).push(new device_page_widgetroute("fan"));
 }
 void tubelight_page(BuildContext c)
 {
-  Navigator.push(
-    c,
-    MaterialPageRoute(builder: (c) => device_page_widget("tubelight")),
-  );
+  Navigator.of(c).push(new device_page_widgetroute("tubelight"));
 }
 void ac_page(BuildContext c)
 {
