@@ -55,6 +55,10 @@ flutter:
     - assets/error.png
     - assets/ip.jpg
     - assets/ip.png
+    - assets/fan.png
+    - assets/ac.png
+    - assets/tvs.png
+    - assets/tubelight.png
 #    - assets/logo.png
 #    - assets/logo.png
   fonts:

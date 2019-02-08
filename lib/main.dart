@@ -10,21 +10,41 @@ String ip="192.168.0.1";
 List<String> tv,ac,fan,tubelight;
 String tvs,acs,fans,tubelights;
 String mode;
+DateTime currentBackPressTime = DateTime.now();
+
+
 Future<String> load_devices(String room) async
 {
   var response = await http.get("http://"+ip+"/smart/getmode.php");
-  mode=response.body.toString();
-  if(mode=="1")
-  {
-    response = await http.get("http://"+ip+"/smart/get_id.php?device=tv&room="+room);
-    tvs=response.body.toString();
-    response = await http.get("http://"+ip+"/smart/get_id.php?device=ac&room="+room);
-    acs=response.body.toString();
-    response = await http.get("http://"+ip+"/smart/get_id.php?device=fan&room="+room);
-    fans=response.body.toString();
-    response = await http.get("http://"+ip+"/smart/get_id.php?device=tubelight&room="+room);
-    tubelights=response.body.toString();
+  if(response.statusCode==200) {
+    mode = response.body.toString();
+    if (mode == "1") {
+      response = await http.get(
+          "http://" + ip + "/smart/get_id.php?device=tv&room=" + room);
+      tvs = response.body.toString();
+      tv = tvs.split(",");
+      response = await http.get(
+          "http://" + ip + "/smart/get_id.php?device=ac&room=" + room);
+      acs = response.body.toString();
+      ac = acs.split(",");
+      response = await http.get(
+          "http://" + ip + "/smart/get_id.php?device=fan&room=" + room);
+      fans = response.body.toString();
+      fan = fans.split(",");
+      response = await http.get(
+          "http://" + ip + "/smart/get_id.php?device=tubelight&room=" + room);
+      tubelights = response.body.toString();
+      tubelight = tubelights.split(",");
+    }
   }
+  else
+    {
+      tv=[];
+      ac=[];
+      fan=[];
+      tubelight=[];
+      mode="0";
+    }
   return "done";
 }
 void main()
@@ -39,11 +59,12 @@ void main()
 }
 class app extends StatelessWidget
 {
+
   Widget build(BuildContext bc)
   {
     return new MaterialApp(
       theme: ThemeData.light(),
-      home: new Scaffold(
+      home:new Scaffold(
         resizeToAvoidBottomPadding: false,
         body: new login(),
 
@@ -74,6 +95,7 @@ class login extends StatefulWidget
 }
 
 class loginstate extends State<login> {
+
   void forget_method()
   {
     Navigator.of(context).push(new forgetpageroute());
@@ -492,7 +514,7 @@ class hardwarepage extends State<hardware> {
                 fit: BoxFit.fitHeight,
                 color: Color(0000000).withOpacity(0.90),
                 colorBlendMode: BlendMode.darken,),
-              new Text("hardwarepage")
+              new device_page()
 
 
             ]
@@ -903,17 +925,6 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new SizedBox(
-          child: new Image(
-            image: new AssetImage("assets/ip.png"),
-            fit: BoxFit.fitHeight,
-            color: Colors.white,
-
-          ),
-          width: 150,
-            height: 150,
-        ),
-        new Padding(padding:EdgeInsets.all(30)),
-        new SizedBox(
           width: 400,
           child:new TextField(
             textAlign: TextAlign.center,
@@ -930,6 +941,19 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
         ),
         new Padding(padding:EdgeInsets.all(30)),
         new SizedBox(
+          child: new Image(
+            image: new AssetImage("assets/ip.png"),
+            fit: BoxFit.fitHeight,
+            color: Colors.white,
+
+          ),
+          width: 150,
+            height: 150,
+        ),
+        new Padding(padding:EdgeInsets.all(30)),
+
+
+        new SizedBox(
           width: 200,
           child:  new MaterialButton(
             padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
@@ -941,5 +965,869 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
         ),
       ],
     );
+  }
+}
+class device_page_widget  extends StatelessWidget
+{
+  String device;
+  device_page_widget(this.device);
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    if(device=="tubelight")
+    {
+      if(tubelight.length!=0) {
+        return Scaffold
+          (
+          appBar: new AppBar(
+            title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
+
+          ),
+          drawer: new Drawer(
+              child: new ListView(
+                children: <Widget> [
+                  new DrawerHeader(
+                      child:new Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new Padding(padding:EdgeInsets.all(10)),
+                          new Icon(Icons.home,size: 70,)
+                        ],
+                      )
+                  ),
+                  new ListTile(
+                    title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    onTap: () {
+                      switch_modetap(context);
+                    },
+                    trailing:new Icon(Icons.autorenew),
+                  ),
+                  new ListTile(
+                    title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    onTap: () {
+                      hardwaretap(context);
+                    },
+                    trailing:new Icon(Icons.account_balance),
+                  ),
+                  new ListTile(
+                    title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    onTap: () {
+                      smartmodetap(context);
+                    },
+                    trailing:new Icon(Icons.fiber_smart_record,),
+                  ),
+
+                  new ListTile(
+                    title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    trailing:new Icon(Icons.settings,),
+                    onTap: () {
+                      configtap(context);
+                    },
+                  ),
+                  new ListTile(
+                    title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    trailing:new Icon(Icons.wb_sunny,),
+                    onTap: () {
+                      weathertap(context);
+                    },
+                  ),
+                ],
+              )
+          ),
+            body:  new Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  new Image(
+                    image: new AssetImage("assets/main.jpg"),
+                    fit: BoxFit.fitHeight,
+                    color: Color(0000000).withOpacity(0.90),
+                    colorBlendMode: BlendMode.darken,),
+                  new tubelight_list()
+
+
+                ]
+            )
+        );
+      }
+      else
+      {
+        return Scaffold
+          (
+          appBar: new AppBar(
+            title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
+
+          ),
+          drawer: new Drawer(
+              child: new ListView(
+                children: <Widget> [
+                  new DrawerHeader(
+                      child:new Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new Padding(padding:EdgeInsets.all(10)),
+                          new Icon(Icons.home,size: 70,)
+                        ],
+                      )
+                  ),
+                  new ListTile(
+                    title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    onTap: () {
+                      switch_modetap(context);
+                    },
+                    trailing:new Icon(Icons.autorenew),
+                  ),
+                  new ListTile(
+                    title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    onTap: () {
+                      hardwaretap(context);
+                    },
+                    trailing:new Icon(Icons.account_balance),
+                  ),
+                  new ListTile(
+                    title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    onTap: () {
+                      smartmodetap(context);
+                    },
+                    trailing:new Icon(Icons.fiber_smart_record,),
+                  ),
+
+                  new ListTile(
+                    title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    trailing:new Icon(Icons.settings,),
+                    onTap: () {
+                      configtap(context);
+                    },
+                  ),
+                  new ListTile(
+                    title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    trailing:new Icon(Icons.wb_sunny,),
+                    onTap: () {
+                      weathertap(context);
+                    },
+                  ),
+                ],
+              )
+          ),
+          body:  new Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                new Image(
+                  image: new AssetImage("assets/main.jpg"),
+                  fit: BoxFit.fitHeight,
+                  color: Color(0000000).withOpacity(0.90),
+                  colorBlendMode: BlendMode.darken,),
+                new Center(
+                  child:Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Icon(Icons.close,size: 250,),
+                      new Text("No Devices Available",style: TextStyle(fontSize: 30,fontFamily: 'po'),)
+                    ],
+                  ),
+                ),
+
+
+              ]
+          )
+        );
+      }
+    }
+    else if(device=="fan")
+    {
+      if(fan.length!=0) {
+        return Scaffold
+          (
+          appBar: new AppBar(
+            title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
+
+          ),
+          drawer: new Drawer(
+              child: new ListView(
+                children: <Widget> [
+                  new DrawerHeader(
+                      child:new Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new Padding(padding:EdgeInsets.all(10)),
+                          new Icon(Icons.home,size: 70,)
+                        ],
+                      )
+                  ),
+                  new ListTile(
+                    title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    onTap: () {
+                      switch_modetap(context);
+                    },
+                    trailing:new Icon(Icons.autorenew),
+                  ),
+                  new ListTile(
+                    title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    onTap: () {
+                      hardwaretap(context);
+                    },
+                    trailing:new Icon(Icons.account_balance),
+                  ),
+                  new ListTile(
+                    title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    onTap: () {
+                      smartmodetap(context);
+                    },
+                    trailing:new Icon(Icons.fiber_smart_record,),
+                  ),
+
+                  new ListTile(
+                    title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    trailing:new Icon(Icons.settings,),
+                    onTap: () {
+                      configtap(context);
+                    },
+                  ),
+                  new ListTile(
+                    title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                    trailing:new Icon(Icons.wb_sunny,),
+                    onTap: () {
+                      weathertap(context);
+                    },
+                  ),
+                ],
+              )
+          ),
+          body:  new Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+          new Image(
+          image: new AssetImage("assets/main.jpg"),
+          fit: BoxFit.fitHeight,
+          color: Color(0000000).withOpacity(0.90),
+          colorBlendMode: BlendMode.darken,),
+          new fan_list()
+
+
+          ]
+          )
+        );
+      }
+      else
+      {
+        return Scaffold
+          (
+          appBar: new AppBar(
+            title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
+
+          ),drawer: new Drawer(
+            child: new ListView(
+              children: <Widget> [
+                new DrawerHeader(
+                    child:new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Padding(padding:EdgeInsets.all(10)),
+                        new Icon(Icons.home,size: 70,)
+                      ],
+                    )
+                ),
+                new ListTile(
+                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    switch_modetap(context);
+                  },
+                  trailing:new Icon(Icons.autorenew),
+                ),
+                new ListTile(
+                  title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    hardwaretap(context);
+                  },
+                  trailing:new Icon(Icons.account_balance),
+                ),
+                new ListTile(
+                  title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    smartmodetap(context);
+                  },
+                  trailing:new Icon(Icons.fiber_smart_record,),
+                ),
+
+                new ListTile(
+                  title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(Icons.settings,),
+                  onTap: () {
+                    configtap(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(Icons.wb_sunny,),
+                  onTap: () {
+                    weathertap(context);
+                  },
+                ),
+              ],
+            )
+        ),
+        body:  new Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+        new Image(
+        image: new AssetImage("assets/main.jpg"),
+        fit: BoxFit.fitHeight,
+        color: Color(0000000).withOpacity(0.90),
+        colorBlendMode: BlendMode.darken,),
+        new Center(
+          child:Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Icon(Icons.close,size: 250,),
+              new Text("No Devices Available",style: TextStyle(fontSize: 30,fontFamily: 'po'),)
+            ],
+          ),
+        ),
+
+
+        ]
+        )
+        );
+      }
+    }
+
+  }
+}
+void fan_page(BuildContext c)
+{
+  Navigator.push(
+    c,
+    MaterialPageRoute(builder: (c) => device_page_widget("fan")),
+  );
+}
+void tubelight_page(BuildContext c)
+{
+  Navigator.push(
+    c,
+    MaterialPageRoute(builder: (c) => device_page_widget("tubelight")),
+  );
+}
+void ac_page(BuildContext c)
+{
+  Fluttertoast.showToast(msg: "AC");
+}
+void tv_page(BuildContext c)
+{
+  Fluttertoast.showToast(msg: "TV");
+}
+class device_page extends StatelessWidget
+{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+//
+    return new ListView(
+      children: <Widget>[
+        new Padding(padding:EdgeInsets.all(10)),
+        new Container(
+            padding: EdgeInsets.all(20),
+
+            child:new MaterialButton(
+                onPressed: ()=>fan_page(context),
+                child:new Column(
+                  children: <Widget>[
+                    new Text("Fan ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                    new Padding(padding: EdgeInsets.all(20)),
+                    new Image.asset('assets/fan.png',fit: BoxFit.fill,color: Colors.white,height: 200,),
+                  ],
+                )
+            )),
+        new Padding(padding: EdgeInsets.all(30),),
+        new Container(
+            padding: EdgeInsets.all(20),
+
+            child:new MaterialButton(
+                onPressed: ()=>tubelight_page(context),
+                child:new Column(
+                  children: <Widget>[
+                    new Text("Tubelight ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                    new Padding(padding: EdgeInsets.all(20)),
+                    new Image.asset('assets/tubelight.png',fit: BoxFit.fill,color: Colors.white,height:200),
+                  ],
+                )
+            )),
+        new Padding(padding: EdgeInsets.all(30),),
+        new Container(
+            padding: EdgeInsets.all(20),
+
+            child:new MaterialButton(
+                onPressed: ()=>ac_page(context),
+                child:new Column(
+                  children: <Widget>[
+                    new Text("AC ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                    new Padding(padding: EdgeInsets.all(20)),
+                    new Image.asset('assets/ac.png',fit: BoxFit.fill,color: Colors.white,height:200),
+                  ],
+                )
+            )),
+        new Padding(padding: EdgeInsets.all(30),),
+        new Container(
+          padding: EdgeInsets.all(20),
+
+          child:new MaterialButton(
+//            shape: new OutlineInputBorder(borderSide: BorderSide(color:Colors.white,width: 10,style: BorderStyle.solid)),
+              onPressed: ()=>tv_page(context),
+              child:new Column(
+                children: <Widget>[
+                  new Text("TV ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                  new Padding(padding: EdgeInsets.all(20)),
+                  new Image.asset('assets/tvs.png',fit: BoxFit.fill,color: Colors.white,height:200),
+                ],
+              )
+          ),
+        ),
+        new Padding(padding:EdgeInsets.all(10)),
+      ],
+    );
+  }
+}
+class fan_list extends StatefulWidget
+{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return fan_list_state();
+  }
+}
+class fan_list_state extends State<fan_list>
+{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return new ListView.builder(
+      reverse: false,
+      itemBuilder:(_,int index)=>fan_list_builder(fan[index],index+1),
+      itemCount: fan.length,
+    );
+  }
+}
+class fan_list_builder extends StatelessWidget
+{
+  String id;
+  int num;
+  fan_list_builder(this.id,this.num);
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return fan_widget(this.id,this.num);
+  }
+}
+class fan_widget extends StatefulWidget
+{
+  String id;
+  int num;
+  @override
+  fan_widget(this.id,this.num);
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return fan_widget_state(this.id,this.num);
+  }
+}
+class fan_widget_state extends State<fan_widget>
+{
+  @override
+  String id;
+  int num;
+  fan_widget_state(this.id,this.num);
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+
+        border: Border.all(
+          color: Colors.black,
+          width: 0.0,
+        ),
+      ),
+      child: Column(
+        children: <Widget>[
+          new Padding(padding:EdgeInsets.all(20)),
+          new Text("Fan "+num.toString(),textAlign: TextAlign.center,style: TextStyle(fontSize: 30,fontFamily: 'po',fontWeight:FontWeight.bold),),
+          new Padding(padding: EdgeInsets.all(7)),
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Icon(Icons.fiber_smart_record,),
+              new Text("  Status : ",style: TextStyle(fontSize:22,fontFamily: 'po',fontWeight:FontWeight.bold)),
+              new SizedBox(
+                  width: 70,
+                  child:new switch_widget(false,this.id,"fan")
+              ),
+            ],
+          ),
+          new Padding(padding:EdgeInsets.all(7)),
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Icon(Icons.shutter_speed),
+              new Text("  Speed : ",style: TextStyle(fontSize:22,fontFamily: 'po',fontWeight:FontWeight.bold)),
+              new fan_slider(5,this.id,)
+
+            ],
+          ),
+          new Padding(padding:EdgeInsets.all(20)),
+        ],
+      ),
+    );
+  }
+}
+class switch_widget extends StatefulWidget {
+  switch_widget(this.word,this.id,this.switch1);
+  final String id;
+  final bool word;
+  final String switch1;
+  int n;
+  @override
+  State<StatefulWidget> createState() =>
+      new _switch_widget(this.id,this.switch1);
+}
+
+
+class _switch_widget extends State<switch_widget>
+    with TickerProviderStateMixin {
+  String switch1;
+
+  String datadebug="no data";
+  Future<String> setjson(String data) async
+  {
+    if(switch1=="fan")
+      var response = await http.get("http://"+ip+"/smart/fan.php?mode=write&id="+id+"&data=status&value="+data);
+    else
+      var response = await http.get("http://"+ip+"/smart/tubelight.php?mode=write&id="+id+"&data=status&value="+data);
+    return "done";
+  }
+  Future<String> getjson() async
+  {
+    String data;
+    var response;
+    if(switch1=="fan")
+      response = await http.get("http://"+ip+"/smart/fan.php?mode=read&id="+id+"&data=status");
+    else
+      response = await http.get("http://"+ip+"/smart/tubelight.php?mode=read&id="+id+"&data=status");
+    if(response.statusCode==200)
+    {
+      data=response.body;
+      if(data=="1")
+      {
+        word=true;
+      }
+      else if(data=="0")
+      {
+        word=false;
+      }
+      return "done";
+    }
+    else
+    {
+      data="error";
+      return "not done";
+    }
+  }
+  void _onChanged1(bool value)
+  {
+    setjson(value.toString());
+    setState(() => word = value);
+  }
+
+  _switch_widget(this.id,this.switch1);
+
+  bool word;
+  Timer timer;
+  int n;
+  String id;
+  @override
+  void didUpdateWidget(switch_widget oldWidget) {
+    if (oldWidget.word != widget.word) {
+      word = widget.word;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    word = widget.word;
+
+    timer = new Timer.periodic(new Duration(milliseconds:500), (Timer timer) {
+      setState(() {
+        getjson();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return new Switch(value: word,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      onChanged:_onChanged1,
+    );
+
+  }
+}
+class fan_slider extends StatefulWidget {
+  fan_slider(this.intensity,this.id);
+  final String id;
+  final double intensity;
+  int n;
+  @override
+  State<StatefulWidget> createState() =>
+      new _fan_slider(this.id,this.intensity);
+}
+
+
+class _fan_slider extends State<fan_slider>
+    with TickerProviderStateMixin {
+
+  String datadebug="no data";
+  Future<String> setjson(String data) async
+  {
+    var response = await http.get("http://"+ip+"/smart/fan.php?mode=write&id="+id+"&data=speed&value="+data);
+    return "done";
+  }
+  Future<String> getjson() async
+  {
+    String data;
+    var response = await http.get("http://"+ip+"/smart/fan.php?mode=read&id="+id+"&data=speed");
+    if(response.statusCode==200)
+    {
+      data=response.body;
+      intensity=double.parse(data);
+    }
+    else
+    {
+      data="error";
+      return "not done";
+    }
+  }
+  void _onChanged1(double value)
+  {
+    setjson(value.toString());
+    setState(() => intensity = value);
+  }
+
+  _fan_slider(this.id,this.intensity);
+  double intensity;
+  Timer timer;
+  int n;
+  String id;
+  @override
+  void didUpdateWidget(fan_slider oldWidget) {
+    if (oldWidget.intensity != widget.intensity) {
+      intensity = widget.intensity;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    intensity = widget.intensity;
+
+    timer = new Timer.periodic(new Duration(milliseconds:500), (Timer timer) {
+      setState(() {
+        getjson();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return new Slider(value: intensity,
+      onChanged:_onChanged1,
+      min: 0.0,
+      max: 5,
+      activeColor:Colors.deepOrange,
+      inactiveColor:Colors.white,
+    );
+
+  }
+}
+class tubelight_list extends StatefulWidget
+{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return tubelight_list_state();
+  }
+}
+class tubelight_list_state extends State<tubelight_list>
+{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return  new ListView.builder(
+      reverse: false,
+      itemBuilder:(_,int index)=>tubelight_list_builder(tubelight[index],index+1),
+      itemCount: tubelight.length,
+    );
+  }
+}
+class tubelight_list_builder extends StatelessWidget
+{
+  String id;
+  int num;
+  tubelight_list_builder(this.id,this.num);
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return tubelight_widget(this.id,this.num);
+  }
+}
+class tubelight_widget extends StatefulWidget
+{
+  String id;
+  int num;
+  @override
+  tubelight_widget(this.id,this.num);
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return tubelight_widget_state(this.id,this.num);
+  }
+}
+class tubelight_widget_state extends State<tubelight_widget>
+{
+  @override
+  String id;
+  int num;
+  tubelight_widget_state(this.id,this.num);
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+
+        border: Border.all(
+          color: Colors.black,
+          width: 0.0,
+        ),
+      ),
+      child: Column(
+        children: <Widget>[
+          new Padding(padding:EdgeInsets.all(20)),
+          new Text("Tubelight "+num.toString(),textAlign: TextAlign.center,style: TextStyle(fontSize: 30,fontFamily: 'po',fontWeight:FontWeight.bold),),
+          new Padding(padding: EdgeInsets.all(7)),
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Icon(Icons.fiber_smart_record,),
+              new Text("  Status : ",style: TextStyle(fontSize:22,fontFamily: 'po',fontWeight:FontWeight.bold)),
+              new SizedBox(
+                  width: 70,
+                  child:new switch_widget(false,this.id,"tubelight")
+              ),
+            ],
+          ),
+          new Padding(padding:EdgeInsets.all(7)),
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Icon(Icons.wb_sunny),
+              new Text("  Intensity : ",style: TextStyle(fontSize:22,fontFamily: 'po',fontWeight:FontWeight.bold)),
+              new tubelight_slider(5,this.id,)
+
+            ],
+          ),
+          new Padding(padding:EdgeInsets.all(20)),
+        ],
+      ),
+    );
+  }
+}
+class tubelight_slider extends StatefulWidget {
+  tubelight_slider(this.intensity,this.id);
+  final String id;
+  final double intensity;
+  int n;
+  @override
+  State<StatefulWidget> createState() =>
+      new _tubelight_slider(this.id,this.intensity);
+}
+
+
+class _tubelight_slider extends State<tubelight_slider>
+    with TickerProviderStateMixin {
+
+  String datadebug="no data";
+  Future<String> setjson(String data) async
+  {
+    var response = await http.get("http://"+ip+"/smart/tubelight.php?mode=write&id="+id+"&data=intensity&value="+data);
+    return "done";
+  }
+  Future<String> getjson() async
+  {
+    String data;
+    var response = await http.get("http://"+ip+"/smart/tubelight.php?mode=read&id="+id+"&data=intensity");
+    if(response.statusCode==200)
+    {
+      data=response.body;
+      intensity=double.parse(data);
+    }
+    else
+    {
+      data="error";
+      return "not done";
+    }
+  }
+  void _onChanged1(double value)
+  {
+    setjson(value.toString());
+    setState(() => intensity = value);
+  }
+
+  _tubelight_slider(this.id,this.intensity);
+  double intensity;
+  Timer timer;
+  int n;
+  String id;
+  @override
+  void didUpdateWidget(tubelight_slider oldWidget) {
+    if (oldWidget.intensity != widget.intensity) {
+      intensity = widget.intensity;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    intensity = widget.intensity;
+
+    timer = new Timer.periodic(new Duration(milliseconds:500), (Timer timer) {
+      setState(() {
+        getjson();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return new Slider(value: intensity,
+      onChanged:_onChanged1,
+      min: 0.0,
+      max: 10,
+      activeColor:Colors.deepOrange,
+      inactiveColor:Colors.white,
+    );
+
   }
 }
