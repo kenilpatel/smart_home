@@ -66,7 +66,7 @@ class app extends StatelessWidget
       theme: ThemeData.light(),
       home:new Scaffold(
         resizeToAvoidBottomPadding: false,
-        body: new login(),
+        body: new home(),
 
       ),
       debugShowCheckedModeBanner: false,
@@ -163,10 +163,7 @@ class loginstate extends State<login> {
                             shape: new CircleBorder(),
                             color: Colors.white,
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => home()),
-                              );
+                              Navigator.of(context).push(new success_loginpageroute());
                             },
                           ),
                         ),
@@ -188,6 +185,18 @@ class loginstate extends State<login> {
       )
 
     );
+  }
+}
+class success_loginpageroute extends CupertinoPageRoute {
+  success_loginpageroute()
+      : super(builder: (BuildContext context) => new home());
+
+
+  // OPTIONAL IF YOU WISH TO HAVE SOME EXTRA ANIMATION WHILE ROUTING
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new home());
   }
 }
 class loginpageroute extends CupertinoPageRoute {
@@ -536,19 +545,20 @@ class hardwarepage extends State<hardware> {
                   trailing:new Icon(Icons.fiber_smart_record,),
                 ),
                 new ListTile(
-                  title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                  trailing:new Icon(Icons.wb_sunny,),
-                  onTap: () {
-                    weathertap(context);
-                  },
-                ),
-                new ListTile(
                   title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   trailing:new Icon(Icons.settings,),
                   onTap: () {
                     configtap(context);
                   },
                 ),
+                new ListTile(
+                  title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(Icons.wb_sunny,),
+                  onTap: () {
+                    weathertap(context);
+                  },
+                ),
+
               ],
             )
         ),
@@ -616,19 +626,20 @@ class smartmodepage extends State<smartmode> {
                   trailing:new Icon(Icons.fiber_smart_record,),
                 ),
                 new ListTile(
-                  title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20)),
-                  trailing:new Icon(Icons.wb_sunny,),
-                  onTap: () {
-                    weathertap(context);
-                  },
-                ),
-                new ListTile(
                   title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20)),
                   trailing:new Icon(Icons.settings,),
                   onTap: () {
                     configtap(context);
                   },
                 ),
+                new ListTile(
+                  title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20)),
+                  trailing:new Icon(Icons.wb_sunny,),
+                  onTap: () {
+                    weathertap(context);
+                  },
+                ),
+
               ],
             )
         ),
@@ -696,19 +707,20 @@ class weatherpage extends State<weather> {
                   trailing:new Icon(Icons.fiber_smart_record,),
                 ),
                 new ListTile(
-                  title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20)),
-                  trailing:new Icon(Icons.wb_sunny,),
-                  onTap: () {
-                    weathertap(context);
-                  },
-                ),
-                new ListTile(
                   title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20)),
                   trailing:new Icon(Icons.settings,),
                   onTap: () {
                     configtap(context);
                   },
                 ),
+                new ListTile(
+                  title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20)),
+                  trailing:new Icon(Icons.wb_sunny,),
+                  onTap: () {
+                    weathertap(context);
+                  },
+                ),
+
               ],
             )
         ),
@@ -777,19 +789,20 @@ class configpage extends State<config> {
                   trailing:new Icon(Icons.fiber_smart_record,),
                 ),
                 new ListTile(
-                  title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20)),
-                  trailing:new Icon(Icons.wb_sunny,),
-                  onTap: () {
-                    weathertap(context);
-                  },
-                ),
-                new ListTile(
                   title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20)),
                   trailing:new Icon(Icons.settings,),
                   onTap: () {
                     configtap(context);
                   },
                 ),
+                new ListTile(
+                  title: new Text('Weather',style: TextStyle(fontFamily: 'po',fontSize: 20)),
+                  trailing:new Icon(Icons.wb_sunny,),
+                  onTap: () {
+                    weathertap(context);
+                  },
+                ),
+
               ],
             )
         ),
@@ -1369,71 +1382,114 @@ void tv_page(BuildContext c)
 }
 class device_page extends StatelessWidget
 {
-  @override
+  Widget buildtv(BuildContext context)
+  {
+    if(tvs=="")
+    {
+      return Text("");
+    }
+    else
+      {
+        return new Container(
+
+        padding: EdgeInsets.all(20),
+
+        child:new MaterialButton(
+    //            shape: new OutlineInputBorder(borderSide: BorderSide(color:Colors.white,width: 10,style: BorderStyle.solid)),
+        onPressed: ()=>tv_page(context),
+        child:new Column(
+        children: <Widget>[
+        new Text("TV ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+        new Padding(padding: EdgeInsets.all(20)),
+        new Image.asset('assets/tvs.png',fit: BoxFit.fill,color: Colors.white,height:200),
+      ],
+      )
+      ),
+      );
+      }
+  }
+  Widget buildac(BuildContext context)
+  {
+    if(acs=="")
+    {
+      return Text("");
+    }
+    else
+    {
+        return new Container(
+        padding: EdgeInsets.all(20),
+
+        child:new MaterialButton(
+        onPressed: ()=>ac_page(context),
+        child:new Column(
+        children: <Widget>[
+        new Text("AC ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+        new Padding(padding: EdgeInsets.all(20)),
+        new Image.asset('assets/ac.png',fit: BoxFit.fill,color: Colors.white,height:200),
+      ],
+      )
+      ));
+    }
+  }
+  Widget buildfan(BuildContext context)
+  {
+      if(fans=="")
+      {
+        return Text("");
+      }
+      else
+        {
+          return new Container(
+              padding: EdgeInsets.all(20),
+
+              child:new MaterialButton(
+                  onPressed: ()=>fan_page(context),
+                  child:new Column(
+                    children: <Widget>[
+
+                      new Text("Fan ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                      new Padding(padding: EdgeInsets.all(20)),
+                      new Image.asset('assets/fan.png',fit: BoxFit.fill,color: Colors.white,height: 200,),
+                    ],
+                  )
+              ));
+        }
+
+  }
+  Widget buildtubelight(BuildContext context)
+  {
+    if(tubelights=="")
+      {
+        return new Text("");
+      }
+      else
+        {
+          return new Container(
+              padding: EdgeInsets.all(20),
+
+              child:new MaterialButton(
+                  onPressed: ()=>tubelight_page(context),
+                  child:new Column(
+                    children: <Widget>[
+                      new Text("Tubelight ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                      new Padding(padding: EdgeInsets.all(20)),
+                      new Image.asset('assets/tubelight.png',fit: BoxFit.fill,color: Colors.white,height:200),
+                    ],
+                  )
+              ));
+        }
+
+  }
+
   Widget build(BuildContext context) {
     // TODO: implement build
 //
     return new ListView(
       children: <Widget>[
-        new Padding(padding:EdgeInsets.all(10)),
-        new Container(
-            padding: EdgeInsets.all(20),
-
-            child:new MaterialButton(
-                onPressed: ()=>fan_page(context),
-                child:new Column(
-                  children: <Widget>[
-                    new Text("Fan ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
-                    new Padding(padding: EdgeInsets.all(20)),
-                    new Image.asset('assets/fan.png',fit: BoxFit.fill,color: Colors.white,height: 200,),
-                  ],
-                )
-            )),
-        new Padding(padding: EdgeInsets.all(30),),
-        new Container(
-            padding: EdgeInsets.all(20),
-
-            child:new MaterialButton(
-                onPressed: ()=>tubelight_page(context),
-                child:new Column(
-                  children: <Widget>[
-                    new Text("Tubelight ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
-                    new Padding(padding: EdgeInsets.all(20)),
-                    new Image.asset('assets/tubelight.png',fit: BoxFit.fill,color: Colors.white,height:200),
-                  ],
-                )
-            )),
-        new Padding(padding: EdgeInsets.all(30),),
-        new Container(
-            padding: EdgeInsets.all(20),
-
-            child:new MaterialButton(
-                onPressed: ()=>ac_page(context),
-                child:new Column(
-                  children: <Widget>[
-                    new Text("AC ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
-                    new Padding(padding: EdgeInsets.all(20)),
-                    new Image.asset('assets/ac.png',fit: BoxFit.fill,color: Colors.white,height:200),
-                  ],
-                )
-            )),
-        new Padding(padding: EdgeInsets.all(30),),
-        new Container(
-          padding: EdgeInsets.all(20),
-
-          child:new MaterialButton(
-//            shape: new OutlineInputBorder(borderSide: BorderSide(color:Colors.white,width: 10,style: BorderStyle.solid)),
-              onPressed: ()=>tv_page(context),
-              child:new Column(
-                children: <Widget>[
-                  new Text("TV ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
-                  new Padding(padding: EdgeInsets.all(20)),
-                  new Image.asset('assets/tvs.png',fit: BoxFit.fill,color: Colors.white,height:200),
-                ],
-              )
-          ),
-        ),
-        new Padding(padding:EdgeInsets.all(10)),
+        buildtubelight(context),
+        buildfan(context),
+        buildtv(context),
+        buildac(context)
       ],
     );
   }
