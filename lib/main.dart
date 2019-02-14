@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:convert';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -40,13 +39,13 @@ Future<String> load_devices(String room) async
     }
   }
   else
-    {
-      tv=[];
-      ac=[];
-      fan=[];
-      tubelight=[];
-      mode="0";
-    }
+  {
+    tv=[];
+    ac=[];
+    fan=[];
+    tubelight=[];
+    mode="0";
+  }
   return "done";
 }
 void getip() async
@@ -113,34 +112,42 @@ class login extends StatefulWidget
 
 class loginstate extends State<login> {
 
+  void login() async
+  {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ip", ip + "," + "1" + "," + user + "," + pass);
+    session="1";
+    Navigator.of(context).push(new success_loginpageroute());
+   // Navigator.of(context).pop();
+  }
 
   Widget build(BuildContext bc)
   {
 
     return Scaffold(
         resizeToAvoidBottomPadding: false,
-      body: new Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          new Image(
+        body: new Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            new Image(
               image: new AssetImage("assets/main.jpg"),
               fit: BoxFit.fitHeight,
               color: Color(0000000).withOpacity(0.90),
               colorBlendMode: BlendMode.darken,
 
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-            //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
-              new Padding(padding: EdgeInsets.all(10),),
-              new Icon(MdiIcons.homeCityOutline,size: 100,color: Colors.white,),
-              new Padding(padding: EdgeInsets.all(10),),
-              Text("smARt",style: TextStyle(color:Colors.white,fontSize:70,fontFamily:'po'),),
-              Text("Welcome to AR based smart home ",style: TextStyle(color:Colors.white,fontSize:20,fontFamily:'po')),
-              new Padding(padding: EdgeInsets.only(bottom: 50)),
-              new Container(
-                child: new Form(
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
+                new Padding(padding: EdgeInsets.all(10),),
+                new Icon(MdiIcons.homeCityOutline,size: 100,color: Colors.white,),
+                new Padding(padding: EdgeInsets.all(10),),
+                Text("smARt",style: TextStyle(color:Colors.white,fontSize:70,fontFamily:'po'),),
+                Text("Welcome to AR based smart home ",style: TextStyle(color:Colors.white,fontSize:20,fontFamily:'po')),
+                new Padding(padding: EdgeInsets.only(bottom: 50)),
+                new Container(
+                  child: new Form(
                     child: Column(
                       children: <Widget>[
                         new SizedBox(
@@ -183,8 +190,8 @@ class loginstate extends State<login> {
                             shape: new CircleBorder(),
                             color: Colors.white,
                             onPressed: () {
-                              Fluttertoast.showToast(msg: "ip:"+ip+"\nsession:"+session+"\nuser:"+user+"\npass:"+pass);
-                              Navigator.of(context).push(new success_loginpageroute());
+                              login();
+
                             },
                           ),
                         ),
@@ -192,12 +199,12 @@ class loginstate extends State<login> {
 
                       ],
                     ),
-                ),
-              )
-          ],)
+                  ),
+                )
+              ],)
 
-        ],
-      )
+          ],
+        )
 
     );
   }
@@ -228,12 +235,19 @@ class loginpageroute extends CupertinoPageRoute {
 }
 class home extends StatelessWidget {
   @override
+  Widget widgetbuild()
+  {
+    if(session=="0")
+      return login();
+    else
+      return MyHomePage();
+  }
   Widget build(BuildContext context) {
     return new MaterialApp(
       theme: ThemeData.dark(),
       home: new Scaffold(
         resizeToAvoidBottomPadding: false,
-        body: new login(),
+        body:widgetbuild(),
 
       ),
       debugShowCheckedModeBanner: false,
@@ -270,14 +284,14 @@ class  smartmoderoute extends CupertinoPageRoute {
     return new FadeTransition(opacity: animation, child: new smartmode());
   }
 }
-class  weatherroute extends CupertinoPageRoute {
-  weatherroute()
-      : super(builder: (BuildContext context) => new weather());
+class  logoutroute extends CupertinoPageRoute {
+  logoutroute()
+      : super(builder: (BuildContext context) => new home());
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    return new FadeTransition(opacity: animation, child: new weather());
+    return new FadeTransition(opacity: animation, child: new home());
   }
 }
 class  configroute extends CupertinoPageRoute {
@@ -289,6 +303,34 @@ class  configroute extends CupertinoPageRoute {
       Animation<double> secondaryAnimation) {
     return new FadeTransition(opacity: animation, child: new config());
   }
+}
+class  passwordr extends CupertinoPageRoute {
+  passwordr()
+      : super(builder: (BuildContext context) => new passwordpage());
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new passwordpage());
+  }
+}
+class  userr extends CupertinoPageRoute {
+  userr()
+      : super(builder: (BuildContext context) => new usernamepage());
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return new FadeTransition(opacity: animation, child: new usernamepage());
+  }
+}
+void chnguser(BuildContext context)
+{
+  Navigator.of(context).push(new userr());
+}
+void chngpass(BuildContext context)
+{
+  Navigator.of(context).push(new passwordr());
 }
 void switch_modetap(BuildContext context)
 {
@@ -331,24 +373,259 @@ void smartmodetap(BuildContext context)
 
   });
 }
-void  logouttap(BuildContext context)
+void  logouttap(BuildContext context) async
 {
-  Navigator.of(context).push(new weatherroute());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("ip", ip + "," + "0" + "," + user + "," + pass);
+  session="0";
+  Navigator.of(context).push(new logoutroute());
 }
 void configtap(BuildContext context)
 {
   Navigator.of(context).push(new configroute());
 }
-class MyHomePage extends StatefulWidget {
+class change_username extends StatefulWidget
+{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return new change_username_state();
+  }
+}
+
+class change_username_state extends State<change_username> {
+  void changeusername() async
+  {
+    if(username.text=="" && confirm_username.text=="")
+      Fluttertoast.showToast(msg: "You can not left this field null");
+    else if(username.text==confirm_username.text)
+    {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("ip", ip + "," + session + "," + username.text + "," + pass);
+      Fluttertoast.showToast(msg: "Username changed successfully");
+    }
+    else
+      Fluttertoast.showToast(msg: "Please enter same username in both fields");
+  }
+
+  TextEditingController username = new TextEditingController();
+  TextEditingController confirm_username = new TextEditingController();
+  Widget build(BuildContext bc)
+  {
+
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: new Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            new Image(
+              image: new AssetImage("assets/main.jpg"),
+              fit: BoxFit.fitHeight,
+              color: Color(0000000).withOpacity(0.90),
+              colorBlendMode: BlendMode.darken,
+
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
+                new Icon(MdiIcons.accountConvert,size: 100,color: Colors.white,),
+
+                new Padding(padding: EdgeInsets.only(bottom: 50)),
+                new Container(
+                  child: new Form(
+                    child: Column(
+                      children: <Widget>[
+                        new SizedBox(
+                          width: 300,
+                          child:new TextField(
+                            controller: username,
+                            textAlign: TextAlign.center,
+                            decoration: new InputDecoration(
+                                border: InputBorder.none,
+//                                icon:Icon(Icons.account_box,color: Colors.white,),
+                                prefixIcon: Icon(Icons.supervised_user_circle,color: Colors.white,),
+                                hintText: "New Username",
+
+                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                            ),
+                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                            obscureText: true,
+
+                          ),
+                        ),
+                        new Padding(padding:EdgeInsets.all(20)),
+                        new SizedBox(
+                          width: 300,
+                          child:new TextField(
+                            controller: confirm_username,
+                            textAlign: TextAlign.center,
+                            decoration: new InputDecoration(
+                                border: InputBorder.none,
+                                prefixIcon:Icon(Icons.supervised_user_circle,color: Colors.white,),
+                                hintText: "Confirm Username",
+                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                            ),
+                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                            obscureText: true,
+
+                          ),
+                        ),
+                        new Padding(padding:EdgeInsets.all(20)),
+                        new SizedBox(
+                          width: 300,
+                          child:  new MaterialButton(
+                            padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
+                            child: Text("Change username",style:TextStyle(color:Colors.black,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold),),
+                            shape: new CircleBorder(),
+                            color: Colors.white,
+                            onPressed: () {
+                              changeusername();
+                            },
+                          ),
+                        ),
+                        new Padding(padding:EdgeInsets.all(20)),
+
+                      ],
+                    ),
+                  ),
+                )
+              ],)
+
+          ],
+        )
+
+    );
+  }
+}
+class change_password extends StatefulWidget
+{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return new change_password_state();
+  }
+}
+
+class change_password_state extends State<change_password> {
+  void changepassword() async
+  {
+
+    if(password.text=="" && confirm_password.text=="")
+      Fluttertoast.showToast(msg: "You can not left this field null");
+    else if(password.text==confirm_password.text) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("ip", ip + "," + session + "," + user + "," + password.text);
+      Fluttertoast.showToast(msg: "password changed successfully");
+    }
+    else
+      Fluttertoast.showToast(msg: "Please enter same password in both fields");
+  }
+
+  TextEditingController password = new TextEditingController();
+  TextEditingController confirm_password = new TextEditingController();
+  Widget build(BuildContext bc)
+  {
+
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: new Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            new Image(
+              image: new AssetImage("assets/main.jpg"),
+              fit: BoxFit.fitHeight,
+              color: Color(0000000).withOpacity(0.90),
+              colorBlendMode: BlendMode.darken,
+
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
+                new Icon(MdiIcons.accountKeyOutline,size: 100,color: Colors.white,),
+
+                new Padding(padding: EdgeInsets.only(bottom: 50)),
+                new Container(
+                  child: new Form(
+                    child: Column(
+                      children: <Widget>[
+                        new SizedBox(
+                          width: 300,
+                          child:new TextField(
+                            controller: password,
+                            textAlign: TextAlign.center,
+                            decoration: new InputDecoration(
+                                border: InputBorder.none,
+//                                icon:Icon(Icons.account_box,color: Colors.white,),
+                                prefixIcon: Icon(MdiIcons.lockReset,color: Colors.white,),
+                                hintText: "New password",
+
+                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                            ),
+                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                            obscureText: true,
+
+                          ),
+                        ),
+                        new Padding(padding:EdgeInsets.all(20)),
+                        new SizedBox(
+                          width: 300,
+                          child:new TextField(
+                            controller: confirm_password,
+                            textAlign: TextAlign.center,
+                            decoration: new InputDecoration(
+                                border: InputBorder.none,
+                                prefixIcon:Icon(MdiIcons.lockReset,color: Colors.white,),
+                                hintText: "Confirm password",
+                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                            ),
+                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                            obscureText: true,
+
+                          ),
+                        ),
+                        new Padding(padding:EdgeInsets.all(20)),
+                        new SizedBox(
+                          width: 300,
+                          child:  new MaterialButton(
+                            padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
+                            child: Text("Change password",style:TextStyle(color:Colors.black,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold),),
+                            shape: new CircleBorder(),
+                            color: Colors.white,
+                            onPressed: () {
+                              changepassword();
+                            },
+                          ),
+                        ),
+                        new Padding(padding:EdgeInsets.all(20)),
+
+                      ],
+                    ),
+                  ),
+                )
+              ],)
+
+          ],
+        )
+
+    );
+  }
+}
+class usernamepage extends StatefulWidget {
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _usernamepage();
+  }
 }
-class _MyHomePageState extends State<MyHomePage> {
+class _usernamepage extends State<usernamepage> {
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: new AppBar(
           title: new Center(child:new Text('smARt',style: TextStyle(fontFamily:'po',fontSize: 40),)),
 
@@ -395,6 +672,215 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.logout),
+                  onTap: () {
+                    logouttap(context);
+                  },
+                ),
+              ],
+            )
+        ),
+        body:  new Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              new Image(
+                image: new AssetImage("assets/main.jpg"),
+                fit: BoxFit.fitHeight,
+                color: Color(0000000).withOpacity(0.90),
+                colorBlendMode: BlendMode.darken,),
+              new change_username(),
+
+
+            ]
+        )
+    );
+  }
+}
+class passwordpage extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _passwordpage();
+  }
+}
+class _passwordpage extends State<passwordpage> {
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+        resizeToAvoidBottomPadding: false,
+        appBar: new AppBar(
+          title: new Center(child:new Text('smARt',style: TextStyle(fontFamily:'po',fontSize: 40),)),
+
+        ),
+        drawer: new Drawer(
+            child: new ListView(
+              children: <Widget> [
+                new DrawerHeader(
+                    child:new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Padding(padding:EdgeInsets.all(10)),
+                        new Icon(MdiIcons.homeCircle,size: 70,)
+                      ],
+                    )
+                ),
+                new ListTile(
+                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    switch_modetap(context);
+                  },
+                  trailing:new Icon(Icons.autorenew),
+                ),
+                new ListTile(
+                  title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    hardwaretap(context);
+                  },
+                  trailing:new Icon(Icons.account_balance),
+                ),
+                new ListTile(
+                  title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    smartmodetap(context);
+                  },
+                  trailing:new Icon(Icons.fiber_smart_record,),
+                ),
+
+                new ListTile(
+                  title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(Icons.settings,),
+                  onTap: () {
+                    configtap(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.logout),
+                  onTap: () {
+                    logouttap(context);
+                  },
+                ),
+              ],
+            )
+        ),
+        body:  new Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              new Image(
+                image: new AssetImage("assets/main.jpg"),
+                fit: BoxFit.fitHeight,
+                color: Color(0000000).withOpacity(0.90),
+                colorBlendMode: BlendMode.darken,),
+              new change_password(),
+
+
+            ]
+        )
+    );
+  }
+}
+class MyHomePage extends StatefulWidget {
+
+  @override
+  _MyHomePageState createState() => new _MyHomePageState();
+}
+class _MyHomePageState extends State<MyHomePage> {
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+        resizeToAvoidBottomPadding: false,
+        appBar: new AppBar(
+          title: new Center(child:new Text('smARt',style: TextStyle(fontFamily:'po',fontSize: 40),)),
+
+        ),
+        drawer: new Drawer(
+            child: new ListView(
+              children: <Widget> [
+                new DrawerHeader(
+                    child:new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Padding(padding:EdgeInsets.all(10)),
+                        new Icon(MdiIcons.homeCircle,size: 70,)
+                      ],
+                    )
+                ),
+                new ListTile(
+                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    switch_modetap(context);
+                  },
+                  trailing:new Icon(Icons.autorenew),
+                ),
+                new ListTile(
+                  title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    hardwaretap(context);
+                  },
+                  trailing:new Icon(Icons.account_balance),
+                ),
+                new ListTile(
+                  title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    smartmodetap(context);
+                  },
+                  trailing:new Icon(Icons.fiber_smart_record,),
+                ),
+
+                new ListTile(
+                  title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(Icons.settings,),
+                  onTap: () {
+                    configtap(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
+                  },
+                ),
+                new ListTile(
                   title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   trailing:new Icon(MdiIcons.logout),
                   onTap: () {
@@ -430,6 +916,7 @@ class hardwarepage extends State<hardware> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: new AppBar(
           title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
 
@@ -475,6 +962,20 @@ class hardwarepage extends State<hardware> {
                   },
                 ),
                 new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
+                  },
+                ),
+                new ListTile(
                   title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   trailing:new Icon(MdiIcons.logout),
                   onTap: () {
@@ -511,6 +1012,7 @@ class smartmodepage extends State<smartmode> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: new AppBar(
           title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40))),
 
@@ -553,6 +1055,20 @@ class smartmodepage extends State<smartmode> {
                   trailing:new Icon(Icons.settings,),
                   onTap: () {
                     configtap(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
                   },
                 ),
                 new ListTile(
@@ -592,6 +1108,7 @@ class weatherpage extends State<weather> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: new AppBar(
           title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40))),
 
@@ -634,6 +1151,20 @@ class weatherpage extends State<weather> {
                   trailing:new Icon(Icons.settings,),
                   onTap: () {
                     configtap(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
                   },
                 ),
                 new ListTile(
@@ -719,6 +1250,20 @@ class configpage extends State<config> {
                   },
                 ),
                 new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
+                  },
+                ),
+                new ListTile(
                   title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   trailing:new Icon(MdiIcons.logout),
                   onTap: () {
@@ -737,7 +1282,7 @@ class configpage extends State<config> {
                 fit: BoxFit.fitHeight,
                 color: Color(0000000).withOpacity(0.90),
                 colorBlendMode: BlendMode.darken,),
-                new changeip()
+              new changeip()
 
 
             ]
@@ -915,7 +1460,7 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
 
           ),
           width: 150,
-            height: 150,
+          height: 150,
         ),
         new Padding(padding:EdgeInsets.all(30)),
 
@@ -946,321 +1491,7 @@ class device_page_widget  extends StatelessWidget
       if(tubelight.length!=0) {
         return Scaffold
           (
-          appBar: new AppBar(
-            title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
-
-          ),
-          drawer: new Drawer(
-              child: new ListView(
-                children: <Widget> [
-                  new DrawerHeader(
-                      child:new Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Padding(padding:EdgeInsets.all(10)),
-                          new Icon(MdiIcons.homeCircle,size: 70,)
-                        ],
-                      )
-                  ),
-                  new ListTile(
-                    title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    onTap: () {
-                      switch_modetap(context);
-                    },
-                    trailing:new Icon(Icons.autorenew),
-                  ),
-                  new ListTile(
-                    title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    onTap: () {
-                      hardwaretap(context);
-                    },
-                    trailing:new Icon(Icons.account_balance),
-                  ),
-                  new ListTile(
-                    title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    onTap: () {
-                      smartmodetap(context);
-                    },
-                    trailing:new Icon(Icons.fiber_smart_record,),
-                  ),
-
-                  new ListTile(
-                    title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    trailing:new Icon(Icons.settings,),
-                    onTap: () {
-                      configtap(context);
-                    },
-                  ),
-                  new ListTile(
-                    title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    trailing:new Icon(MdiIcons.logout),
-                    onTap: () {
-                      logouttap(context);
-                    },
-                  ),
-                ],
-              )
-          ),
-            body:  new Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  new Image(
-                    image: new AssetImage("assets/main.jpg"),
-                    fit: BoxFit.fitHeight,
-                    color: Color(0000000).withOpacity(0.90),
-                    colorBlendMode: BlendMode.darken,),
-                  new tubelight_list()
-
-
-                ]
-            )
-        );
-      }
-      else
-      {
-        return Scaffold
-          (
-          appBar: new AppBar(
-            title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
-
-          ),
-          drawer: new Drawer(
-              child: new ListView(
-                children: <Widget> [
-                  new DrawerHeader(
-                      child:new Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Padding(padding:EdgeInsets.all(10)),
-                          new Icon(MdiIcons.homeCircle,size: 70,)
-                        ],
-                      )
-                  ),
-                  new ListTile(
-                    title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    onTap: () {
-                      switch_modetap(context);
-                    },
-                    trailing:new Icon(Icons.autorenew),
-                  ),
-                  new ListTile(
-                    title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    onTap: () {
-                      hardwaretap(context);
-                    },
-                    trailing:new Icon(Icons.account_balance),
-                  ),
-                  new ListTile(
-                    title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    onTap: () {
-                      smartmodetap(context);
-                    },
-                    trailing:new Icon(Icons.fiber_smart_record,),
-                  ),
-
-                  new ListTile(
-                    title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    trailing:new Icon(Icons.settings,),
-                    onTap: () {
-                      configtap(context);
-                    },
-                  ),
-                  new ListTile(
-                    title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    trailing:new Icon(MdiIcons.logout),
-                    onTap: () {
-                      logouttap(context);
-                    },
-                  ),
-                ],
-              )
-          ),
-          body:  new Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                new Image(
-                  image: new AssetImage("assets/main.jpg"),
-                  fit: BoxFit.fitHeight,
-                  color: Color(0000000).withOpacity(0.90),
-                  colorBlendMode: BlendMode.darken,),
-                new Center(
-                  child:Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new Icon(Icons.close,size: 250,),
-                      new Text("No Devices Available",style: TextStyle(fontSize: 30,fontFamily: 'po'),)
-                    ],
-                  ),
-                ),
-
-
-              ]
-          )
-        );
-      }
-    }
-    else if(device=="fan")
-    {
-      if(fan.length!=0) {
-        return Scaffold
-          (
-          appBar: new AppBar(
-            title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
-
-          ),
-          drawer: new Drawer(
-              child: new ListView(
-                children: <Widget> [
-                  new DrawerHeader(
-                      child:new Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Padding(padding:EdgeInsets.all(10)),
-                          new Icon(MdiIcons.homeCircle,size: 70,)
-                        ],
-                      )
-                  ),
-                  new ListTile(
-                    title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    onTap: () {
-                      switch_modetap(context);
-                    },
-                    trailing:new Icon(Icons.autorenew),
-                  ),
-                  new ListTile(
-                    title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    onTap: () {
-                      hardwaretap(context);
-                    },
-                    trailing:new Icon(Icons.account_balance),
-                  ),
-                  new ListTile(
-                    title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    onTap: () {
-                      smartmodetap(context);
-                    },
-                    trailing:new Icon(Icons.fiber_smart_record,),
-                  ),
-
-                  new ListTile(
-                    title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    trailing:new Icon(Icons.settings,),
-                    onTap: () {
-                      configtap(context);
-                    },
-                  ),
-                  new ListTile(
-                    title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                    trailing:new Icon(MdiIcons.logout),
-                    onTap: () {
-                      logouttap(context);
-                    },
-                  ),
-                ],
-              )
-          ),
-          body:  new Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-          new Image(
-          image: new AssetImage("assets/main.jpg"),
-          fit: BoxFit.fitHeight,
-          color: Color(0000000).withOpacity(0.90),
-          colorBlendMode: BlendMode.darken,),
-          new fan_list()
-
-
-          ]
-          )
-        );
-      }
-      else
-      {
-        return Scaffold
-          (
-          appBar: new AppBar(
-            title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
-
-          ),drawer: new Drawer(
-            child: new ListView(
-              children: <Widget> [
-                new DrawerHeader(
-                    child:new Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        new Padding(padding:EdgeInsets.all(10)),
-                        new Icon(MdiIcons.homeCircle,size: 70,)
-                      ],
-                    )
-                ),
-                new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                  onTap: () {
-                    switch_modetap(context);
-                  },
-                  trailing:new Icon(Icons.autorenew),
-                ),
-                new ListTile(
-                  title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                  onTap: () {
-                    hardwaretap(context);
-                  },
-                  trailing:new Icon(Icons.account_balance),
-                ),
-                new ListTile(
-                  title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                  onTap: () {
-                    smartmodetap(context);
-                  },
-                  trailing:new Icon(Icons.fiber_smart_record,),
-                ),
-
-                new ListTile(
-                  title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                  trailing:new Icon(Icons.settings,),
-                  onTap: () {
-                    configtap(context);
-                  },
-                ),
-                new ListTile(
-                  title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
-                  trailing:new Icon(MdiIcons.logout),
-                  onTap: () {
-                    logouttap(context);
-                  },
-                ),
-              ],
-            )
-        ),
-        body:  new Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-        new Image(
-        image: new AssetImage("assets/main.jpg"),
-        fit: BoxFit.fitHeight,
-        color: Color(0000000).withOpacity(0.90),
-        colorBlendMode: BlendMode.darken,),
-        new Center(
-          child:Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Icon(Icons.close,size: 250,),
-              new Text("No Devices Available",style: TextStyle(fontSize: 30,fontFamily: 'po'),)
-            ],
-          ),
-        ),
-
-
-        ]
-        )
-        );
-      }
-    }
-    else if(device=="ac")
-    {
-      if(ac.length!=0) {
-        return Scaffold
-          (
+            resizeToAvoidBottomPadding: false,
             appBar: new AppBar(
               title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
 
@@ -1307,6 +1538,20 @@ class device_page_widget  extends StatelessWidget
                       },
                     ),
                     new ListTile(
+                      title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.accountConvert),
+                      onTap: () {
+                        chnguser(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.lockReset),
+                      onTap: () {
+                        chngpass(context);
+                      },
+                    ),
+                    new ListTile(
                       title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                       trailing:new Icon(MdiIcons.logout),
                       onTap: () {
@@ -1324,7 +1569,7 @@ class device_page_widget  extends StatelessWidget
                     fit: BoxFit.fitHeight,
                     color: Color(0000000).withOpacity(0.90),
                     colorBlendMode: BlendMode.darken,),
-                  new ac_list()
+                  new tubelight_list()
 
 
                 ]
@@ -1335,6 +1580,195 @@ class device_page_widget  extends StatelessWidget
       {
         return Scaffold
           (
+            resizeToAvoidBottomPadding: false,
+            appBar: new AppBar(
+              title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
+
+            ),
+            drawer: new Drawer(
+                child: new ListView(
+                  children: <Widget> [
+                    new DrawerHeader(
+                        child:new Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            new Padding(padding:EdgeInsets.all(10)),
+                            new Icon(MdiIcons.homeCircle,size: 70,)
+                          ],
+                        )
+                    ),
+                    new ListTile(
+                      title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      onTap: () {
+                        switch_modetap(context);
+                      },
+                      trailing:new Icon(Icons.autorenew),
+                    ),
+                    new ListTile(
+                      title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      onTap: () {
+                        hardwaretap(context);
+                      },
+                      trailing:new Icon(Icons.account_balance),
+                    ),
+                    new ListTile(
+                      title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      onTap: () {
+                        smartmodetap(context);
+                      },
+                      trailing:new Icon(Icons.fiber_smart_record,),
+                    ),
+
+                    new ListTile(
+                      title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(Icons.settings,),
+                      onTap: () {
+                        configtap(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.accountConvert),
+                      onTap: () {
+                        chnguser(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.lockReset),
+                      onTap: () {
+                        chngpass(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.logout),
+                      onTap: () {
+                        logouttap(context);
+                      },
+                    ),
+                  ],
+                )
+            ),
+            body:  new Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  new Image(
+                    image: new AssetImage("assets/main.jpg"),
+                    fit: BoxFit.fitHeight,
+                    color: Color(0000000).withOpacity(0.90),
+                    colorBlendMode: BlendMode.darken,),
+                  new Center(
+                    child:Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Icon(Icons.close,size: 250,),
+                        new Text("No Devices Available",style: TextStyle(fontSize: 30,fontFamily: 'po'),)
+                      ],
+                    ),
+                  ),
+
+
+                ]
+            )
+        );
+      }
+    }
+    else if(device=="fan")
+    {
+      if(fan.length!=0) {
+        return Scaffold
+          (
+            resizeToAvoidBottomPadding: false,
+            appBar: new AppBar(
+              title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
+
+            ),
+            drawer: new Drawer(
+                child: new ListView(
+                  children: <Widget> [
+                    new DrawerHeader(
+                        child:new Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            new Padding(padding:EdgeInsets.all(10)),
+                            new Icon(MdiIcons.homeCircle,size: 70,)
+                          ],
+                        )
+                    ),
+                    new ListTile(
+                      title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      onTap: () {
+                        switch_modetap(context);
+                      },
+                      trailing:new Icon(Icons.autorenew),
+                    ),
+                    new ListTile(
+                      title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      onTap: () {
+                        hardwaretap(context);
+                      },
+                      trailing:new Icon(Icons.account_balance),
+                    ),
+                    new ListTile(
+                      title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      onTap: () {
+                        smartmodetap(context);
+                      },
+                      trailing:new Icon(Icons.fiber_smart_record,),
+                    ),
+
+                    new ListTile(
+                      title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(Icons.settings,),
+                      onTap: () {
+                        configtap(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.accountConvert),
+                      onTap: () {
+                        chnguser(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.lockReset),
+                      onTap: () {
+                        chngpass(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.logout),
+                      onTap: () {
+                        logouttap(context);
+                      },
+                    ),
+                  ],
+                )
+            ),
+            body:  new Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  new Image(
+                    image: new AssetImage("assets/main.jpg"),
+                    fit: BoxFit.fitHeight,
+                    color: Color(0000000).withOpacity(0.90),
+                    colorBlendMode: BlendMode.darken,),
+                  new fan_list()
+
+
+                ]
+            )
+        );
+      }
+      else
+      {
+        return Scaffold
+          (
+            resizeToAvoidBottomPadding: false,
             appBar: new AppBar(
               title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
 
@@ -1377,6 +1811,207 @@ class device_page_widget  extends StatelessWidget
                   trailing:new Icon(Icons.settings,),
                   onTap: () {
                     configtap(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.logout),
+                  onTap: () {
+                    logouttap(context);
+                  },
+                ),
+              ],
+            )
+        ),
+            body:  new Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  new Image(
+                    image: new AssetImage("assets/main.jpg"),
+                    fit: BoxFit.fitHeight,
+                    color: Color(0000000).withOpacity(0.90),
+                    colorBlendMode: BlendMode.darken,),
+                  new Center(
+                    child:Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Icon(Icons.close,size: 250,),
+                        new Text("No Devices Available",style: TextStyle(fontSize: 30,fontFamily: 'po'),)
+                      ],
+                    ),
+                  ),
+
+
+                ]
+            )
+        );
+      }
+    }
+    else if(device=="ac")
+    {
+      if(ac.length!=0) {
+        return Scaffold
+          (
+            resizeToAvoidBottomPadding: false,
+            appBar: new AppBar(
+              title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
+
+            ),
+            drawer: new Drawer(
+                child: new ListView(
+                  children: <Widget> [
+                    new DrawerHeader(
+                        child:new Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            new Padding(padding:EdgeInsets.all(10)),
+                            new Icon(MdiIcons.homeCircle,size: 70,)
+                          ],
+                        )
+                    ),
+                    new ListTile(
+                      title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      onTap: () {
+                        switch_modetap(context);
+                      },
+                      trailing:new Icon(Icons.autorenew),
+                    ),
+                    new ListTile(
+                      title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      onTap: () {
+                        hardwaretap(context);
+                      },
+                      trailing:new Icon(Icons.account_balance),
+                    ),
+                    new ListTile(
+                      title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      onTap: () {
+                        smartmodetap(context);
+                      },
+                      trailing:new Icon(Icons.fiber_smart_record,),
+                    ),
+
+                    new ListTile(
+                      title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(Icons.settings,),
+                      onTap: () {
+                        configtap(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.accountConvert),
+                      onTap: () {
+                        chnguser(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.lockReset),
+                      onTap: () {
+                        chngpass(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.logout),
+                      onTap: () {
+                        logouttap(context);
+                      },
+                    ),
+                  ],
+                )
+            ),
+            body:  new Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  new Image(
+                    image: new AssetImage("assets/main.jpg"),
+                    fit: BoxFit.fitHeight,
+                    color: Color(0000000).withOpacity(0.90),
+                    colorBlendMode: BlendMode.darken,),
+                  new ac_list()
+
+
+                ]
+            )
+        );
+      }
+      else
+      {
+        return Scaffold
+          (
+            resizeToAvoidBottomPadding: false,
+            appBar: new AppBar(
+              title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
+
+            ),drawer: new Drawer(
+            child: new ListView(
+              children: <Widget> [
+                new DrawerHeader(
+                    child:new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Padding(padding:EdgeInsets.all(10)),
+                        new Icon(MdiIcons.homeCircle,size: 70,)
+                      ],
+                    )
+                ),
+                new ListTile(
+                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    switch_modetap(context);
+                  },
+                  trailing:new Icon(Icons.autorenew),
+                ),
+                new ListTile(
+                  title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    hardwaretap(context);
+                  },
+                  trailing:new Icon(Icons.account_balance),
+                ),
+                new ListTile(
+                  title: new Text('Smart modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  onTap: () {
+                    smartmodetap(context);
+                  },
+                  trailing:new Icon(Icons.fiber_smart_record,),
+                ),
+
+                new ListTile(
+                  title: new Text('Configuration',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(Icons.settings,),
+                  onTap: () {
+                    configtap(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
                   },
                 ),
                 new ListTile(
@@ -1418,6 +2053,7 @@ class device_page_widget  extends StatelessWidget
       if(tv.length!=0) {
         return Scaffold
           (
+            resizeToAvoidBottomPadding: false,
             appBar: new AppBar(
               title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
 
@@ -1464,6 +2100,20 @@ class device_page_widget  extends StatelessWidget
                       },
                     ),
                     new ListTile(
+                      title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.accountConvert),
+                      onTap: () {
+                        chnguser(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.lockReset),
+                      onTap: () {
+                        chngpass(context);
+                      },
+                    ),
+                    new ListTile(
                       title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                       trailing:new Icon(MdiIcons.logout),
                       onTap: () {
@@ -1492,6 +2142,7 @@ class device_page_widget  extends StatelessWidget
       {
         return Scaffold
           (
+            resizeToAvoidBottomPadding: false,
             appBar: new AppBar(
               title: new Center(child:new Text('smARt',style: TextStyle(fontFamily: 'po',fontSize: 40),)),
 
@@ -1534,6 +2185,20 @@ class device_page_widget  extends StatelessWidget
                   trailing:new Icon(Icons.settings,),
                   onTap: () {
                     configtap(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Username',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.accountConvert),
+                  onTap: () {
+                    chnguser(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Change Password',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.lockReset),
+                  onTap: () {
+                    chngpass(context);
                   },
                 ),
                 new ListTile(
@@ -1611,24 +2276,24 @@ class device_page extends StatelessWidget
       return Text("");
     }
     else
-      {
-        return new Container(
+    {
+      return new Container(
 
         padding: EdgeInsets.all(20),
 
         child:new MaterialButton(
-    //            shape: new OutlineInputBorder(borderSide: BorderSide(color:Colors.white,width: 10,style: BorderStyle.solid)),
-        onPressed: ()=>tv_page(context),
-        child:new Column(
-        children: <Widget>[
-        new Text("TV ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
-        new Padding(padding: EdgeInsets.all(20)),
-        new Image.asset('assets/tvs.png',fit: BoxFit.fill,color: Colors.white,height:200),
-      ],
-      )
-      ),
+          //            shape: new OutlineInputBorder(borderSide: BorderSide(color:Colors.white,width: 10,style: BorderStyle.solid)),
+            onPressed: ()=>tv_page(context),
+            child:new Column(
+              children: <Widget>[
+                new Text("TV ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                new Padding(padding: EdgeInsets.all(20)),
+                new Image.asset('assets/tvs.png',fit: BoxFit.fill,color: Colors.white,height:200),
+              ],
+            )
+        ),
       );
-      }
+    }
   }
   Widget buildac(BuildContext context)
   {
@@ -1638,68 +2303,68 @@ class device_page extends StatelessWidget
     }
     else
     {
-        return new Container(
-        padding: EdgeInsets.all(20),
+      return new Container(
+          padding: EdgeInsets.all(20),
 
-        child:new MaterialButton(
-        onPressed: ()=>ac_page(context),
-        child:new Column(
-        children: <Widget>[
-        new Text("AC ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
-        new Padding(padding: EdgeInsets.all(20)),
-        new Image.asset('assets/ac.png',fit: BoxFit.fill,color: Colors.white,height:200),
-      ],
-      )
-      ));
+          child:new MaterialButton(
+              onPressed: ()=>ac_page(context),
+              child:new Column(
+                children: <Widget>[
+                  new Text("AC ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                  new Padding(padding: EdgeInsets.all(20)),
+                  new Image.asset('assets/ac.png',fit: BoxFit.fill,color: Colors.white,height:200),
+                ],
+              )
+          ));
     }
   }
   Widget buildfan(BuildContext context)
   {
-      if(fans=="")
-      {
-        return Text("");
-      }
-      else
-        {
-          return new Container(
-              padding: EdgeInsets.all(20),
+    if(fans=="")
+    {
+      return Text("");
+    }
+    else
+    {
+      return new Container(
+          padding: EdgeInsets.all(20),
 
-              child:new MaterialButton(
-                  onPressed: ()=>fan_page(context),
-                  child:new Column(
-                    children: <Widget>[
+          child:new MaterialButton(
+              onPressed: ()=>fan_page(context),
+              child:new Column(
+                children: <Widget>[
 
-                      new Text("Fan ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
-                      new Padding(padding: EdgeInsets.all(20)),
-                      new Image.asset('assets/fan.png',fit: BoxFit.fill,color: Colors.white,height: 200,),
-                    ],
-                  )
-              ));
-        }
+                  new Text("Fan ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                  new Padding(padding: EdgeInsets.all(20)),
+                  new Image.asset('assets/fan.png',fit: BoxFit.fill,color: Colors.white,height: 200,),
+                ],
+              )
+          ));
+    }
 
   }
   Widget buildtubelight(BuildContext context)
   {
     if(tubelights=="")
-      {
-        return new Text("");
-      }
-      else
-        {
-          return new Container(
-              padding: EdgeInsets.all(20),
+    {
+      return new Text("");
+    }
+    else
+    {
+      return new Container(
+          padding: EdgeInsets.all(20),
 
-              child:new MaterialButton(
-                  onPressed: ()=>tubelight_page(context),
-                  child:new Column(
-                    children: <Widget>[
-                      new Text("Tubelight ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
-                      new Padding(padding: EdgeInsets.all(20)),
-                      new Image.asset('assets/tubelight.png',fit: BoxFit.fill,color: Colors.white,height:200),
-                    ],
-                  )
-              ));
-        }
+          child:new MaterialButton(
+              onPressed: ()=>tubelight_page(context),
+              child:new Column(
+                children: <Widget>[
+                  new Text("Tubelight ",style: TextStyle(fontWeight:FontWeight.bold,fontSize: 40,fontFamily: 'po',color: Colors.white),),
+                  new Padding(padding: EdgeInsets.all(20)),
+                  new Image.asset('assets/tubelight.png',fit: BoxFit.fill,color: Colors.white,height:200),
+                ],
+              )
+          ));
+    }
 
   }
 
@@ -1762,20 +2427,24 @@ class _ac_widget extends State<ac_widget>
   String id;
   int num;
   _ac_widget(this.id,this.num);
-  void poweron()
+  void poweron() async
   {
+    var response = await http.get("http://"+ip+"/smart/ac.php?data=power&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "power on");
   }
-  void poweroff()
+  void poweroff() async
   {
+    var response = await http.get("http://"+ip+"/smart/ac.php?data=power_off&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "power off");
   }
-  void tempup()
+  void tempup() async
   {
+    var response = await http.get("http://"+ip+"/smart/ac.php?data=temp_up&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "temp up");
   }
-  void tempdown()
+  void tempdown() async
   {
+    var response = await http.get("http://"+ip+"/smart/ac.php?data=temp_down&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "temp down");
   }
   @override
@@ -1870,36 +2539,44 @@ class _tv_widget extends State<tv_widget>
   String id;
   int num;
   _tv_widget(this.id,this.num);
-  void poweron()
+  void poweron() async
   {
+    var response = await http.get("http://"+ip+"/smart/tv.php?data=power&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "power on");
   }
-  void poweroff()
+  void poweroff() async
   {
+    var response = await http.get("http://"+ip+"/smart/tv.php?data=power_off&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "power off");
   }
-  void volup()
+  void volup() async
   {
+    var response = await http.get("http://"+ip+"/smart/tv.php?data=volume_up&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "vol up");
   }
-  void voldown()
+  void voldown() async
   {
+    var response = await http.get("http://"+ip+"/smart/tv.php?data=volume_down&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "vol down");
   }
-  void chnlup()
+  void chnlup() async
   {
+    var response = await http.get("http://"+ip+"/smart/tv.php?data=channel_up&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "chnl up");
   }
-  void chnldown()
+  void chnldown() async
   {
+    var response = await http.get("http://"+ip+"/smart/tv.php?data=channel_down&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "chnl down");
   }
-  void muteon()
+  void muteon() async
   {
+    var response = await http.get("http://"+ip+"/smart/tv.php?data=mute_on&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "mute on ");
   }
-  void muteoff()
+  void muteoff() async
   {
+    var response = await http.get("http://"+ip+"/smart/tv.php?data=mute_off&mode=write&value=1&id="+id);
     Fluttertoast.showToast(msg: "mute off");
   }
   @override
@@ -1953,8 +2630,8 @@ class _tv_widget extends State<tv_widget>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     new Text("Mute : ",style: TextStyle(fontSize: 30,fontFamily: 'po',fontWeight:FontWeight.bold),),
-                    new IconButton(icon: Icon(MdiIcons.volumeHigh),iconSize:70, onPressed:chnldown ,splashColor:Colors.deepOrange,),
-                    new IconButton(icon: Icon(MdiIcons.volumeMute),iconSize:70, onPressed:chnlup ,splashColor:Colors.deepOrange,)
+                    new IconButton(icon: Icon(MdiIcons.volumeHigh),iconSize:70, onPressed:muteon ,splashColor:Colors.deepOrange,),
+                    new IconButton(icon: Icon(MdiIcons.volumeMute),iconSize:70, onPressed:muteoff ,splashColor:Colors.deepOrange,)
                   ],
                 ),
                 new Padding(padding: EdgeInsets.all(10))
@@ -2020,11 +2697,11 @@ class fan_widget_state extends State<fan_widget>
     return Container(
       decoration: BoxDecoration(
 
-      border: Border.all(
-        color: Colors.black,
-        width: 0.0,
+        border: Border.all(
+          color: Colors.black,
+          width: 0.0,
+        ),
       ),
-    ),
       child: Column(
         children: <Widget>[
           new Padding(padding:EdgeInsets.all(20)),
