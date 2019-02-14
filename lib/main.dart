@@ -1488,6 +1488,7 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
     lip=ip1;
     Fluttertoast.showToast(msg: "Ip successfull changed to "+ip,toastLength: Toast.LENGTH_LONG);
     setState((){lip=ip;});
+    Navigator.of(context).push(new MyHomePageroute());
   }
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -2840,7 +2841,13 @@ class _switch_widget extends State<switch_widget>
     }
     else
     {
-      data="error";
+      Fluttertoast.showToast(
+        msg: "You are not in smart mode",
+        toastLength: Toast.LENGTH_LONG,
+
+      );
+      Navigator.of(context).push(new MyHomePageroute());
+      data="0";
       return "not done";
     }
   }
@@ -2923,7 +2930,13 @@ class _fan_slider extends State<fan_slider>
     }
     else
     {
-      data="error";
+      Fluttertoast.showToast(
+        msg: "You are not in smart mode",
+        toastLength: Toast.LENGTH_LONG,
+
+      );
+      Navigator.of(context).push(new MyHomePageroute());
+      data="0";
       return "not done";
     }
   }
@@ -3096,7 +3109,13 @@ class _tubelight_slider extends State<tubelight_slider>
     }
     else
     {
-      data="error";
+      Fluttertoast.showToast(
+        msg: "You are not in smart mode",
+        toastLength: Toast.LENGTH_LONG,
+
+      );
+      Navigator.of(context).push(new MyHomePageroute());
+      data="0";
       return "not done";
     }
   }
