@@ -111,20 +111,51 @@ class login extends StatefulWidget
 }
 
 class loginstate extends State<login> {
+  final user1 = TextEditingController();
+  final pass1= TextEditingController();
 
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ?? false;
+  }
   void login() async
   {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("ip", ip + "," + "1" + "," + user + "," + pass);
-    session="1";
-    Navigator.of(context).push(new success_loginpageroute());
+      if(user1.text==user && pass1.text==pass)
+      {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("ip", ip + "," + "1" + "," + user + "," + pass);
+        session="1";
+        Navigator.of(context).push(new success_loginpageroute());
+      }
+      else
+        {
+          Fluttertoast.showToast(msg:"Please provide proper username and password");
+        }
+
    // Navigator.of(context).pop();
   }
 
   Widget build(BuildContext bc)
   {
 
-    return Scaffold(
+    return  new WillPopScope(
+        onWillPop:_onWillPop,
+    child:Scaffold(
         resizeToAvoidBottomPadding: false,
         body: new Stack(
           fit: StackFit.expand,
@@ -153,6 +184,7 @@ class loginstate extends State<login> {
                         new SizedBox(
                           width: 300,
                           child:new TextField(
+                          controller: user1,
                             textAlign: TextAlign.center,
                             decoration: new InputDecoration(
                                 border: InputBorder.none,
@@ -169,6 +201,7 @@ class loginstate extends State<login> {
                         new SizedBox(
                           width: 300,
                           child:new TextField(
+                            controller: pass1,
                             textAlign: TextAlign.center,
                             decoration: new InputDecoration(
                                 border: InputBorder.none,
@@ -206,7 +239,7 @@ class loginstate extends State<login> {
           ],
         )
 
-    );
+    ));
   }
 }
 class success_loginpageroute extends CupertinoPageRoute {
@@ -286,12 +319,12 @@ class  smartmoderoute extends CupertinoPageRoute {
 }
 class  logoutroute extends CupertinoPageRoute {
   logoutroute()
-      : super(builder: (BuildContext context) => new home());
+      : super(builder: (BuildContext context) => new login());
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    return new FadeTransition(opacity: animation, child: new home());
+    return new FadeTransition(opacity: animation, child: new login());
   }
 }
 class  configroute extends CupertinoPageRoute {
@@ -400,8 +433,10 @@ class change_username_state extends State<change_username> {
       Fluttertoast.showToast(msg: "You can not left this field null");
     else if(username.text==confirm_username.text)
     {
+      Navigator.of(context).push(new logoutroute());
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("ip", ip + "," + session + "," + username.text + "," + pass);
+      prefs.setString("ip", ip + "," + "0" + "," + username.text + "," + pass);
+      user=username.text;
       Fluttertoast.showToast(msg: "Username changed successfully");
     }
     else
@@ -514,8 +549,10 @@ class change_password_state extends State<change_password> {
     if(password.text=="" && confirm_password.text=="")
       Fluttertoast.showToast(msg: "You can not left this field null");
     else if(password.text==confirm_password.text) {
+      Navigator.of(context).push(new logoutroute());
+      pass=password.text;
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("ip", ip + "," + session + "," + user + "," + password.text);
+      prefs.setString("ip", ip + "," + "0" + "," + user + "," + password.text);
       Fluttertoast.showToast(msg: "password changed successfully");
     }
     else
@@ -818,8 +855,29 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   @override
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ?? false;
+  }
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return  new WillPopScope(
+        onWillPop:_onWillPop,
+        child:Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: new AppBar(
           title: new Center(child:new Text('smARt',style: TextStyle(fontFamily:'po',fontSize: 40),)),
@@ -903,7 +961,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             ]
         )
-    );
+    ));
   }
 }
 class hardware extends StatefulWidget {
