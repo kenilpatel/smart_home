@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:async';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -126,7 +127,7 @@ class loginstate extends State<login> {
             child: new Text('No'),
           ),
           new FlatButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () => exit(0),
             child: new Text('Yes'),
           ),
         ],
@@ -867,7 +868,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: new Text('No'),
           ),
           new FlatButton(
-            onPressed: () => Navigator.of(context).pop(true),
+            onPressed: () =>exit(0),
             child: new Text('Yes'),
           ),
         ],
