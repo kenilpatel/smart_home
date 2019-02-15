@@ -1487,9 +1487,21 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
     prefs.setString("ip",ip1+","+session+","+user+","+pass);
     ip=ip1;
     lip=ip1;
-    Fluttertoast.showToast(msg: "Ip successfull changed to "+ip,toastLength: Toast.LENGTH_LONG);
-    setState((){lip=ip;});
+    var response = await http.get("http://"+ip+"/smart/getmode.php");
+    if(response.statusCode==200)
+    {
+      //Fluttertoast.showToast(msg: "Ip successfull changed to "+ip,toastLength: Toast.LENGTH_LONG);
+
+      mode="1";
+    }
+    else
+      {
+        //Fluttertoast.showToast(msg: "Can not connect to this ip",toastLength: Toast.LENGTH_LONG);
+        mode="0";
+      }
     Navigator.of(context).push(new MyHomePageroute());
+    setState((){lip=ip;});
+
   }
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -2476,6 +2488,7 @@ class ac_widget extends StatefulWidget
   String id;
   int num;
   @override
+
   ac_widget(this.id,this.num);
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -2484,9 +2497,21 @@ class ac_widget extends StatefulWidget
 }
 class _ac_widget extends State<ac_widget>
 {
+  final temp=new TextEditingController();
   String id;
   int num;
   _ac_widget(this.id,this.num);
+  void tempchange(String temp) async
+  {
+    if(temp=="")
+      Fluttertoast.showToast(msg: "You can not left this field null");
+    else
+      {
+        Fluttertoast.showToast(msg: "Temp changed to : "+temp);
+        var response = await http.get("http://"+ip+"/smart/ac.php?data=temp&mode=write&value="+temp+"&id="+id);
+      }
+
+  }
   void poweron() async
   {
     var response = await http.get("http://"+ip+"/smart/ac.php?data=power&mode=write&value=1&id="+id);
@@ -2510,6 +2535,7 @@ class _ac_widget extends State<ac_widget>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return Container(
         decoration: BoxDecoration(
 
@@ -2540,8 +2566,29 @@ class _ac_widget extends State<ac_widget>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     new Text("Temp : ",style: TextStyle(fontSize: 30,fontFamily: 'po',fontWeight:FontWeight.bold),),
-                    new IconButton(icon: Icon(MdiIcons.minusBox),iconSize:70, onPressed:tempdown,splashColor:Colors.deepOrange,),
-                    new IconButton(icon: Icon(MdiIcons.plusBox),iconSize:70, onPressed:tempup,splashColor:Colors.deepOrange,)
+                    //new IconButton(icon: Icon(MdiIcons.minusBox),iconSize:70, onPressed:tempdown,splashColor:Colors.deepOrange,),
+                    //new IconButton(icon: Icon(MdiIcons.plusBox),iconSize:70, onPressed:tempup,splashColor:Colors.deepOrange,)
+                      new SizedBox(
+                        width: 100,
+                        child:new TextField(
+                          controller:temp,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          decoration: new InputDecoration(
+                              border: InputBorder.none,
+//                                icon:Icon(Icons.account_box,color: Colors.white,),
+
+                              hintText: "18",
+                              hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+
+                          ),
+                          style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+
+                        ),
+                      ),
+                    new IconButton(icon: Icon(MdiIcons.weatherSnowy), onPressed:(){
+                      tempchange(temp.text);
+                    },iconSize: 50,)
                   ],
                 ),
                 new Padding(padding: EdgeInsets.all(10)),
