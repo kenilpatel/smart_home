@@ -157,85 +157,95 @@ class loginstate extends State<login> {
     return  new WillPopScope(
         onWillPop:_onWillPop,
     child:Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: true,
         body: new Stack(
           fit: StackFit.expand,
           children: <Widget>[
             new Image(
               image: new AssetImage("assets/main.jpg"),
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.cover,
               color: Color(0000000).withOpacity(0.90),
               colorBlendMode: BlendMode.darken,
 
+
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
-                new Padding(padding: EdgeInsets.all(10),),
-                new Icon(MdiIcons.homeCityOutline,size: 100,color: Colors.white,),
-                new Padding(padding: EdgeInsets.all(10),),
-                Text("smARt",style: TextStyle(color:Colors.white,fontSize:70,fontFamily:'po'),),
-                Text("Welcome to AR based smart home ",style: TextStyle(color:Colors.white,fontSize:20,fontFamily:'po')),
-                new Padding(padding: EdgeInsets.only(bottom: 50)),
-                new Container(
-                  child: new Form(
-                    child: Column(
-                      children: <Widget>[
-                        new SizedBox(
-                          width: 300,
-                          child:new TextField(
-                          controller: user1,
-                            textAlign: TextAlign.center,
-                            decoration: new InputDecoration(
-                                border: InputBorder.none,
+            new Center(
+              child: new ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(20.0),
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
+                      new Padding(padding: EdgeInsets.all(10),),
+                      new Icon(MdiIcons.homeCityOutline,size: 100,color: Colors.white,),
+                      new Padding(padding: EdgeInsets.all(10),),
+                      Text("smARt",style: TextStyle(color:Colors.white,fontSize:70,fontFamily:'po'),),
+                      Text("Welcome to AR based smart home ",style: TextStyle(color:Colors.white,fontSize:20,fontFamily:'po')),
+                      new Padding(padding: EdgeInsets.only(bottom: 50)),
+                      new Container(
+                        child: new Form(
+                          child: Column(
+                            children: <Widget>[
+                              new SizedBox(
+                                width: 300,
+                                child:new TextField(
+                                  controller: user1,
+                                  textAlign: TextAlign.center,
+                                  decoration: new InputDecoration(
+                                      border: InputBorder.none,
 //                                icon:Icon(Icons.account_box,color: Colors.white,),
-                                prefixIcon: Icon(Icons.account_box,color: Colors.white,),
-                                hintText: "Username",
-                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
-                            ),
-                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                                      prefixIcon: Icon(Icons.account_box,color: Colors.white,),
+                                      hintText: "Username",
+                                      hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                                  ),
+                                  style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
 
+                                ),
+                              ),
+                              new Padding(padding:EdgeInsets.all(20)),
+                              new SizedBox(
+                                width: 300,
+                                child:new TextField(
+                                  controller: pass1,
+                                  textAlign: TextAlign.center,
+                                  decoration: new InputDecoration(
+                                      border: InputBorder.none,
+                                      prefixIcon:Icon(Icons.lock,color: Colors.white,),
+                                      hintText: "Password",
+                                      hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                                  ),
+                                  style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                                  obscureText: true,
+
+                                ),
+                              ),
+                              new Padding(padding:EdgeInsets.all(20)),
+                              new SizedBox(
+                                width: 300,
+                                child:  new MaterialButton(
+                                  padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
+                                  child: Text("Login",style:TextStyle(color:Colors.black,fontSize:40,fontFamily: 'po',fontWeight: FontWeight.bold),),
+                                  shape: new CircleBorder(),
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    login();
+
+                                  },
+                                ),
+                              ),
+                              new Padding(padding:EdgeInsets.all(20)),
+
+                            ],
                           ),
                         ),
-                        new Padding(padding:EdgeInsets.all(20)),
-                        new SizedBox(
-                          width: 300,
-                          child:new TextField(
-                            controller: pass1,
-                            textAlign: TextAlign.center,
-                            decoration: new InputDecoration(
-                                border: InputBorder.none,
-                                prefixIcon:Icon(Icons.lock,color: Colors.white,),
-                                hintText: "Password",
-                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
-                            ),
-                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
-                            obscureText: true,
+                      )
+                    ],)
+                ],
+              ),
+            )
 
-                          ),
-                        ),
-                        new Padding(padding:EdgeInsets.all(20)),
-                        new SizedBox(
-                          width: 300,
-                          child:  new MaterialButton(
-                            padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
-                            child: Text("Login",style:TextStyle(color:Colors.black,fontSize:40,fontFamily: 'po',fontWeight: FontWeight.bold),),
-                            shape: new CircleBorder(),
-                            color: Colors.white,
-                            onPressed: () {
-                              login();
-
-                            },
-                          ),
-                        ),
-                        new Padding(padding:EdgeInsets.all(20)),
-
-                      ],
-                    ),
-                  ),
-                )
-              ],)
 
           ],
         )
@@ -450,83 +460,93 @@ class change_username_state extends State<change_username> {
   {
 
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: true,
         body: new Stack(
           fit: StackFit.expand,
           children: <Widget>[
             new Image(
               image: new AssetImage("assets/main.jpg"),
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.cover,
               color: Color(0000000).withOpacity(0.90),
               colorBlendMode: BlendMode.darken,
 
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
-                new Icon(MdiIcons.accountConvert,size: 100,color: Colors.white,),
+            new Center(
 
-                new Padding(padding: EdgeInsets.only(bottom: 50)),
-                new Container(
-                  child: new Form(
-                    child: Column(
-                      children: <Widget>[
-                        new SizedBox(
-                          width: 300,
-                          child:new TextField(
-                            controller: username,
-                            textAlign: TextAlign.center,
-                            decoration: new InputDecoration(
-                                border: InputBorder.none,
+              child: new ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(20.0),
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
+                      new Icon(MdiIcons.accountConvert,size: 100,color: Colors.white,),
+
+                      new Padding(padding: EdgeInsets.only(bottom: 50)),
+                      new Container(
+                        child: new Form(
+                          child: Column(
+                            children: <Widget>[
+                              new SizedBox(
+                                width: 300,
+                                child:new TextField(
+                                  controller: username,
+                                  textAlign: TextAlign.center,
+                                  decoration: new InputDecoration(
+                                      border: InputBorder.none,
 //                                icon:Icon(Icons.account_box,color: Colors.white,),
-                                prefixIcon: Icon(Icons.supervised_user_circle,color: Colors.white,),
-                                hintText: "New Username",
+                                      prefixIcon: Icon(Icons.supervised_user_circle,color: Colors.white,),
+                                      hintText: "New Username",
 
-                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
-                            ),
-                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
-                            obscureText: true,
+                                      hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                                  ),
+                                  style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                                  obscureText: true,
 
+                                ),
+                              ),
+                              new Padding(padding:EdgeInsets.all(20)),
+                              new SizedBox(
+                                width: 300,
+                                child:new TextField(
+                                  controller: confirm_username,
+                                  textAlign: TextAlign.center,
+                                  decoration: new InputDecoration(
+                                      border: InputBorder.none,
+                                      prefixIcon:Icon(Icons.supervised_user_circle,color: Colors.white,),
+                                      hintText: "Confirm Username",
+                                      hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                                  ),
+                                  style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                                  obscureText: true,
+
+                                ),
+                              ),
+                              new Padding(padding:EdgeInsets.all(20)),
+                              new SizedBox(
+                                width: 300,
+                                child:  new MaterialButton(
+                                  padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
+                                  child: Text("Change username",style:TextStyle(color:Colors.black,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold),),
+                                  shape: new CircleBorder(),
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    changeusername();
+                                  },
+                                ),
+                              ),
+                              new Padding(padding:EdgeInsets.all(20)),
+
+                            ],
                           ),
                         ),
-                        new Padding(padding:EdgeInsets.all(20)),
-                        new SizedBox(
-                          width: 300,
-                          child:new TextField(
-                            controller: confirm_username,
-                            textAlign: TextAlign.center,
-                            decoration: new InputDecoration(
-                                border: InputBorder.none,
-                                prefixIcon:Icon(Icons.supervised_user_circle,color: Colors.white,),
-                                hintText: "Confirm Username",
-                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
-                            ),
-                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
-                            obscureText: true,
+                      )
+                    ],)
+                ],
+              ),
+            ),
 
-                          ),
-                        ),
-                        new Padding(padding:EdgeInsets.all(20)),
-                        new SizedBox(
-                          width: 300,
-                          child:  new MaterialButton(
-                            padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
-                            child: Text("Change username",style:TextStyle(color:Colors.black,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold),),
-                            shape: new CircleBorder(),
-                            color: Colors.white,
-                            onPressed: () {
-                              changeusername();
-                            },
-                          ),
-                        ),
-                        new Padding(padding:EdgeInsets.all(20)),
-
-                      ],
-                    ),
-                  ),
-                )
-              ],)
 
           ],
         )
@@ -566,83 +586,89 @@ class change_password_state extends State<change_password> {
   {
 
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: true,
         body: new Stack(
           fit: StackFit.expand,
           children: <Widget>[
             new Image(
               image: new AssetImage("assets/main.jpg"),
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.cover,
               color: Color(0000000).withOpacity(0.90),
               colorBlendMode: BlendMode.darken,
 
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
-                new Icon(MdiIcons.accountKeyOutline,size: 100,color: Colors.white,),
+            new Center(
+              child: new ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(20.0),
+                children: <Widget>[Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    //new Image.asset('assets/Manual.png',width: 100,height: 82,fit: BoxFit.fill,color: Colors.white,),
+                    new Icon(MdiIcons.accountKeyOutline,size: 100,color: Colors.white,),
 
-                new Padding(padding: EdgeInsets.only(bottom: 50)),
-                new Container(
-                  child: new Form(
-                    child: Column(
-                      children: <Widget>[
-                        new SizedBox(
-                          width: 300,
-                          child:new TextField(
-                            controller: password,
-                            textAlign: TextAlign.center,
-                            decoration: new InputDecoration(
-                                border: InputBorder.none,
+                    new Padding(padding: EdgeInsets.only(bottom: 50)),
+                    new Container(
+                      child: new Form(
+                        child: Column(
+                          children: <Widget>[
+                            new SizedBox(
+                              width: 300,
+                              child:new TextField(
+                                controller: password,
+                                textAlign: TextAlign.center,
+                                decoration: new InputDecoration(
+                                    border: InputBorder.none,
 //                                icon:Icon(Icons.account_box,color: Colors.white,),
-                                prefixIcon: Icon(MdiIcons.lockReset,color: Colors.white,),
-                                hintText: "New password",
+                                    prefixIcon: Icon(MdiIcons.lockReset,color: Colors.white,),
+                                    hintText: "New password",
 
-                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                                    hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                                ),
+                                style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                                obscureText: true,
+
+                              ),
                             ),
-                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
-                            obscureText: true,
+                            new Padding(padding:EdgeInsets.all(20)),
+                            new SizedBox(
+                              width: 300,
+                              child:new TextField(
+                                controller: confirm_password,
+                                textAlign: TextAlign.center,
+                                decoration: new InputDecoration(
+                                    border: InputBorder.none,
+                                    prefixIcon:Icon(MdiIcons.lockReset,color: Colors.white,),
+                                    hintText: "Confirm password",
+                                    hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                                ),
+                                style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+                                obscureText: true,
 
-                          ),
-                        ),
-                        new Padding(padding:EdgeInsets.all(20)),
-                        new SizedBox(
-                          width: 300,
-                          child:new TextField(
-                            controller: confirm_password,
-                            textAlign: TextAlign.center,
-                            decoration: new InputDecoration(
-                                border: InputBorder.none,
-                                prefixIcon:Icon(MdiIcons.lockReset,color: Colors.white,),
-                                hintText: "Confirm password",
-                                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                              ),
                             ),
-                            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
-                            obscureText: true,
+                            new Padding(padding:EdgeInsets.all(20)),
+                            new SizedBox(
+                              width: 300,
+                              child:  new MaterialButton(
+                                padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
+                                child: Text("Change password",style:TextStyle(color:Colors.black,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold),),
+                                shape: new CircleBorder(),
+                                color: Colors.white,
+                                onPressed: () {
+                                  changepassword();
+                                },
+                              ),
+                            ),
+                            new Padding(padding:EdgeInsets.all(20)),
 
-                          ),
+                          ],
                         ),
-                        new Padding(padding:EdgeInsets.all(20)),
-                        new SizedBox(
-                          width: 300,
-                          child:  new MaterialButton(
-                            padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
-                            child: Text("Change password",style:TextStyle(color:Colors.black,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold),),
-                            shape: new CircleBorder(),
-                            color: Colors.white,
-                            onPressed: () {
-                              changepassword();
-                            },
-                          ),
-                        ),
-                        new Padding(padding:EdgeInsets.all(20)),
-
-                      ],
-                    ),
-                  ),
-                )
-              ],)
+                      ),
+                    )
+                  ],)],
+              ),
+            )
 
           ],
         )
@@ -1338,7 +1364,7 @@ class configpage extends State<config> {
             children: <Widget>[
               new Image(
                 image: new AssetImage("assets/main.jpg"),
-                fit: BoxFit.fitHeight,
+                fit: BoxFit.cover,
                 color: Color(0000000).withOpacity(0.90),
                 colorBlendMode: BlendMode.darken,),
               new changeip()
@@ -1483,15 +1509,14 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
   @override
   void changeip(String ip1) async
   {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("ip",ip1+","+session+","+user+","+pass);
-    ip=ip1;
-    lip=ip1;
-    var response = await http.get("http://"+ip+"/smart/getmode.php");
+
+    var response = await http.get("http://"+ip1+"/smart/getmode.php");
     if(response.statusCode==200)
     {
-      //Fluttertoast.showToast(msg: "Ip successfull changed to "+ip,toastLength: Toast.LENGTH_LONG);
-
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("ip",ip1+","+session+","+user+","+pass);
+      ip=ip1;
+      lip=ip1;
       mode="1";
     }
     else
@@ -1505,49 +1530,57 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
   }
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        new SizedBox(
-          width: 400,
-          child:new TextField(
-            textAlign: TextAlign.center,
-            keyboardType: TextInputType.text,
-            controller: textip,
-            decoration: new InputDecoration(
-                border: InputBorder.none,
-                hintText:"Ip Address",
-                hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
-            ),
-            style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
+    return Center(
+      child: new ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(20.0),
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new SizedBox(
+                width: 400,
+                child:new TextField(
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.text,
+                  controller: textip,
+                  decoration: new InputDecoration(
+                      border: InputBorder.none,
+                      hintText:"Ip Address",
+                      hintStyle:TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po')
+                  ),
+                  style: TextStyle(color:Colors.white,fontSize:30,fontFamily: 'po'),
 
-          ),
-        ),
-        new Padding(padding:EdgeInsets.all(30)),
-        new SizedBox(
-          child: new Image(
-            image: new AssetImage("assets/ip.png"),
-            fit: BoxFit.fitHeight,
-            color: Colors.white,
+                ),
+              ),
+              new Padding(padding:EdgeInsets.all(30)),
+              new SizedBox(
+                child: new Image(
+                  image: new AssetImage("assets/ip.png"),
+                  fit: BoxFit.fitHeight,
+                  color: Colors.white,
 
-          ),
-          width: 150,
-          height: 150,
-        ),
-        new Padding(padding:EdgeInsets.all(30)),
+                ),
+                width: 150,
+                height: 150,
+              ),
+              new Padding(padding:EdgeInsets.all(30)),
 
 
-        new SizedBox(
-          width: 200,
-          child:  new MaterialButton(
-            padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
-            child: Text("Change ip",style:TextStyle(color:Colors.black,fontSize:30,fontFamily: 'po',fontWeight: FontWeight.bold),),
-            shape: new CircleBorder(),
-            color: Colors.white,
-            onPressed:()=>changeip(textip.text),
-          ),
-        ),
-      ],
+              new SizedBox(
+                width: 200,
+                child:  new MaterialButton(
+                  padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
+                  child: Text("Change ip",style:TextStyle(color:Colors.black,fontSize:30,fontFamily: 'po',fontWeight: FontWeight.bold),),
+                  shape: new CircleBorder(),
+                  color: Colors.white,
+                  onPressed:()=>changeip(textip.text),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
