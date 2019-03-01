@@ -20,6 +20,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   sticky_headers: "^0.1.7"
+  animated_background: ^1.0.0
   fluttertoast: ^2.0.7
   material_design_icons_flutter: 3.0.3392
   http: 0.12.0
