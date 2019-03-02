@@ -1560,6 +1560,62 @@ class changeip extends StatefulWidget
 }
 class changeip_state extends State<changeip> with TickerProviderStateMixin
 {
+  TextEditingController password1 = new TextEditingController();
+
+  _showDialog(String password) async {
+    await showDialog<String>(
+      context: context,
+      child: new AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        content: new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new TextField(
+                autofocus: true,
+                controller: password1,
+                textAlign: TextAlign.center,
+                decoration: new InputDecoration(
+                    border: InputBorder.none,
+                    prefixIcon:Icon(Icons.lock,color: Colors.black,),
+                    hintText: "Password",
+                    hintStyle:TextStyle(color:Colors.black,fontSize:30,fontFamily: 'po')
+                ),
+                style: TextStyle(color:Colors.black,fontSize:30,fontFamily: 'po'),
+                obscureText: true,
+              ),
+            )
+          ],
+        ),
+        actions: <Widget>[
+
+
+          new FlatButton(
+
+              child: const Text('Open Connection',style:  TextStyle(color:Colors.black,fontSize:20,fontFamily:'po',fontWeight:FontWeight.bold),),
+              onPressed: () {
+                  if(password==password1.text)
+                    {
+                      //Navigator.of(context).pop();
+                      Navigator.of(context, rootNavigator: true).pop();
+                      Navigator.of(context).push(new MyHomePageroute());
+                      setState((){lip=ip;});
+                    }
+                    else
+                      {
+                        Fluttertoast.showToast(msg: "Incorrect Password");
+                      }
+
+
+              })
+//           new Row(mainAxisAlignment: MainAxisAlignment.center,children:<Widget>[
+//
+//             IconButton(icon: new Icon(MdiIcons.doorOpen,), onPressed: null,iconSize: 40,color: Colors.white,splashColor: Colors.deepOrange,highlightColor:
+//               Colors.orange,disabledColor: Colors.white,),
+//           ] )
+        ],
+      ),
+    );
+  }
   String lip;
   changeip_state()
   {
@@ -1570,9 +1626,11 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
   void changeip(String ip1) async
   {
 
-    var response = await http.get("http://"+ip1+"/smart/getmode.php");
+    var response = await http.get("http://"+ip1+"/smart/getpass.php");
     if(response.statusCode==200)
     {
+      String password=response.body;
+      _showDialog(password);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("ip",ip1+","+session+","+user+","+pass);
       ip=ip1;
@@ -1584,8 +1642,8 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
         //Fluttertoast.showToast(msg: "Can not connect to this ip",toastLength: Toast.LENGTH_LONG);
         mode="0";
       }
-    Navigator.of(context).push(new MyHomePageroute());
-    setState((){lip=ip;});
+//    Navigator.of(context).push(new MyHomePageroute());
+//    setState((){lip=ip;});
 
   }
   Widget build(BuildContext context) {
