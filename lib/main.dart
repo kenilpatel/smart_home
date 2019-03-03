@@ -15,6 +15,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:device_apps/device_apps.dart';
 import 'dart:ui' as ui;
 String ip="192.168.0.1";
 String session="0";
@@ -239,7 +240,8 @@ class loginstate extends State<login> with TickerProviderStateMixin{
                               new Padding(padding:EdgeInsets.all(20)),
                               new SizedBox(
                                 width: 300,
-                                child:  new MaterialButton(
+                                child:  new MaterialButton( 
+                                  splashColor: Colors.deepOrange,
                                   padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
                                   child: Text("Login",style:TextStyle(color:Colors.black,fontSize:40,fontFamily: 'po',fontWeight: FontWeight.bold),),
                                   shape: new CircleBorder(),
@@ -439,6 +441,31 @@ void  logouttap(BuildContext context) async
   session="0";
   Navigator.of(context).push(new logoutroute());
 }
+void augmentedapp()
+{
+  if(mode=="1")
+  {
+    Fluttertoast.showToast(
+        msg: "Lanching AR app...",
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIos: 1
+    );
+    Future.delayed(const Duration(milliseconds:700), ()
+    {
+      DeviceApps.openApp('com.scet.sahil');
+    });
+  }
+  else {
+    Fluttertoast.showToast(
+        msg: "You are not in smart mode",
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIos: 1
+    );
+
+  }
+
+}
+
 void configtap(BuildContext context)
 {
   Navigator.of(context).push(new configroute());
@@ -547,6 +574,7 @@ class change_username_state extends State<change_username> with TickerProviderSt
                               new SizedBox(
                                 width: 300,
                                 child:  new MaterialButton(
+                                    splashColor: Colors.deepOrange,
                                   padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
                                   child: Text("Change username",style:TextStyle(color:Colors.black,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold),),
                                   shape: new CircleBorder(),
@@ -676,6 +704,7 @@ class change_password_state extends State<change_password> with TickerProviderSt
                             new SizedBox(
                               width: 300,
                               child:  new MaterialButton(
+                                splashColor: Colors.deepOrange,
                                 padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
                                 child: Text("Change password",style:TextStyle(color:Colors.black,fontSize:25,fontFamily: 'po',fontWeight: FontWeight.bold),),
                                 shape: new CircleBorder(),
@@ -726,17 +755,16 @@ class _usernamepage extends State<usernamepage> with TickerProviderStateMixin{
                     child:new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        new Padding(padding:EdgeInsets.all(10)),
                         new Icon(MdiIcons.homeCircle,size: 70,)
                       ],
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -775,12 +803,20 @@ class _usernamepage extends State<usernamepage> with TickerProviderStateMixin{
                   },
                 ),
                 new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
+                  },
+                ),
+                new ListTile(
                   title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   trailing:new Icon(MdiIcons.logout),
                   onTap: () {
                     logouttap(context);
                   },
                 ),
+
               ],
             )
         ),
@@ -836,11 +872,11 @@ class _passwordpage extends State<passwordpage> with TickerProviderStateMixin{
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -876,6 +912,13 @@ class _passwordpage extends State<passwordpage> with TickerProviderStateMixin{
                   trailing:new Icon(MdiIcons.lockReset),
                   onTap: () {
                     chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
                   },
                 ),
                 new ListTile(
@@ -958,11 +1001,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -1000,6 +1043,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
                     chngpass(context);
                   },
                 ),
+                new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
+                  },
+                ),
+
                 new ListTile(
                   title: new Text('Log out',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   trailing:new Icon(MdiIcons.logout),
@@ -1059,11 +1110,11 @@ class hardwarepage extends State<hardware> with TickerProviderStateMixin {
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -1098,6 +1149,13 @@ class hardwarepage extends State<hardware> with TickerProviderStateMixin {
                   trailing:new Icon(MdiIcons.lockReset),
                   onTap: () {
                     chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
                   },
                 ),
                 new ListTile(
@@ -1160,11 +1218,11 @@ class smartmodepage extends State<smartmode> with TickerProviderStateMixin{
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20)),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20)),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20)),
@@ -1199,6 +1257,13 @@ class smartmodepage extends State<smartmode> with TickerProviderStateMixin{
                   trailing:new Icon(MdiIcons.lockReset),
                   onTap: () {
                     chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
                   },
                 ),
                 new ListTile(
@@ -1261,11 +1326,11 @@ class weatherpage extends State<weather> with TickerProviderStateMixin{
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20)),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20)),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20)),
@@ -1300,6 +1365,13 @@ class weatherpage extends State<weather> with TickerProviderStateMixin{
                   trailing:new Icon(MdiIcons.lockReset),
                   onTap: () {
                     chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
                   },
                 ),
                 new ListTile(
@@ -1362,11 +1434,11 @@ class configpage extends State<config> with TickerProviderStateMixin {
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20)),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20)),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20)),
@@ -1401,6 +1473,13 @@ class configpage extends State<config> with TickerProviderStateMixin {
                   trailing:new Icon(MdiIcons.lockReset),
                   onTap: () {
                     chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
                   },
                 ),
                 new ListTile(
@@ -1447,10 +1526,10 @@ class auto_manual_switch extends StatefulWidget
 }
 class auto_manual_state extends State<auto_manual_switch> with TickerProviderStateMixin
 {
-  String mode;
+  String mode1;
   auto_manual_state()
   {
-    mode="error";
+    mode1="error";
     word=false;
   }
   Future<String> setjson(String data) async
@@ -1468,27 +1547,30 @@ class auto_manual_state extends State<auto_manual_switch> with TickerProviderSta
       if(response.statusCode==200)
       {
         data=response.body;
+        mode=data;
         if(data=="1")
         {
-          mode="Auto";
+          mode1="Auto";
           word=true;
         }
         else if(data=="0")
         {
-          mode="Manual";
+          mode1="Manual";
           word=false;
         }
         return "done";
       }
       else
       {
-        mode="error";
+        mode="0";
+        mode1="error";
         return "not done";
       }
     }
     catch(e)
     {
-      mode="error";
+      mode="0";
+      mode1="error";
       word=false;
     }
   }
@@ -1534,11 +1616,10 @@ class auto_manual_state extends State<auto_manual_switch> with TickerProviderSta
         new Text("Mode",style: TextStyle(fontSize: 40,fontFamily: 'po'),),
         new Padding(padding: EdgeInsets.all(10)),
         new SizedBox(
-          child: new Image(image: AssetImage("assets/"+mode+".png"),color: Colors.white,),
+          child: new Image(image: AssetImage("assets/"+mode1+".png"),color: Colors.white,),
           width: 200,
           height: 200,
         ),
-        new Padding(padding: EdgeInsets.all(30)),
         new SizedBox(
           width: 70,
           child: new Switch(value:word,
@@ -1688,6 +1769,7 @@ class changeip_state extends State<changeip> with TickerProviderStateMixin
               new SizedBox(
                 width: 200,
                 child:  new MaterialButton(
+                  splashColor: Colors.deepOrange,
                   padding: EdgeInsets.only(left: 20,right: 20,bottom: 4),
                   child: Text("Change ip",style:TextStyle(color:Colors.black,fontSize:30,fontFamily: 'po',fontWeight: FontWeight.bold),),
                   shape: new CircleBorder(),
@@ -1743,11 +1825,11 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                         )
                     ),
                     new ListTile(
-                      title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                       onTap: () {
                         switch_modetap(context);
                       },
-                      trailing:new Icon(Icons.autorenew),
+                      trailing:new Icon(MdiIcons.homeHeart),
                     ),
                     new ListTile(
                       title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -1783,6 +1865,13 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                       trailing:new Icon(MdiIcons.lockReset),
                       onTap: () {
                         chngpass(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.augmentedReality),
+                      onTap: () {
+                        augmentedapp();
                       },
                     ),
                     new ListTile(
@@ -1837,11 +1926,11 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                         )
                     ),
                     new ListTile(
-                      title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                       onTap: () {
                         switch_modetap(context);
                       },
-                      trailing:new Icon(Icons.autorenew),
+                      trailing:new Icon(MdiIcons.homeHeart),
                     ),
                     new ListTile(
                       title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -1877,6 +1966,13 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                       trailing:new Icon(MdiIcons.lockReset),
                       onTap: () {
                         chngpass(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.augmentedReality),
+                      onTap: () {
+                        augmentedapp();
                       },
                     ),
                     new ListTile(
@@ -1941,11 +2037,11 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                         )
                     ),
                     new ListTile(
-                      title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                       onTap: () {
                         switch_modetap(context);
                       },
-                      trailing:new Icon(Icons.autorenew),
+                      trailing:new Icon(MdiIcons.homeHeart),
                     ),
                     new ListTile(
                       title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -1981,6 +2077,13 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                       trailing:new Icon(MdiIcons.lockReset),
                       onTap: () {
                         chngpass(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.augmentedReality),
+                      onTap: () {
+                        augmentedapp();
                       },
                     ),
                     new ListTile(
@@ -2034,11 +2137,11 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -2074,6 +2177,13 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                   trailing:new Icon(MdiIcons.lockReset),
                   onTap: () {
                     chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
                   },
                 ),
                 new ListTile(
@@ -2138,11 +2248,11 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                         )
                     ),
                     new ListTile(
-                      title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                       onTap: () {
                         switch_modetap(context);
                       },
-                      trailing:new Icon(Icons.autorenew),
+                      trailing:new Icon(MdiIcons.homeHeart),
                     ),
                     new ListTile(
                       title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -2178,6 +2288,13 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                       trailing:new Icon(MdiIcons.lockReset),
                       onTap: () {
                         chngpass(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.augmentedReality),
+                      onTap: () {
+                        augmentedapp();
                       },
                     ),
                     new ListTile(
@@ -2231,11 +2348,11 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -2271,6 +2388,13 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                   trailing:new Icon(MdiIcons.lockReset),
                   onTap: () {
                     chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
                   },
                 ),
                 new ListTile(
@@ -2335,11 +2459,11 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                         )
                     ),
                     new ListTile(
-                      title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                       onTap: () {
                         switch_modetap(context);
                       },
-                      trailing:new Icon(Icons.autorenew),
+                      trailing:new Icon(MdiIcons.homeHeart),
                     ),
                     new ListTile(
                       title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -2375,6 +2499,13 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                       trailing:new Icon(MdiIcons.lockReset),
                       onTap: () {
                         chngpass(context);
+                      },
+                    ),
+                    new ListTile(
+                      title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                      trailing:new Icon(MdiIcons.augmentedReality),
+                      onTap: () {
+                        augmentedapp();
                       },
                     ),
                     new ListTile(
@@ -2428,11 +2559,11 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                     )
                 ),
                 new ListTile(
-                  title: new Text('Switch modes',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  title: new Text('Home ',style: TextStyle(fontFamily: 'po',fontSize: 20),),
                   onTap: () {
                     switch_modetap(context);
                   },
-                  trailing:new Icon(Icons.autorenew),
+                  trailing:new Icon(MdiIcons.homeHeart),
                 ),
                 new ListTile(
                   title: new Text('Hardware Lab',style: TextStyle(fontFamily: 'po',fontSize: 20),),
@@ -2468,6 +2599,13 @@ class device_page_widget1  extends State<device_page_widget> with TickerProvider
                   trailing:new Icon(MdiIcons.lockReset),
                   onTap: () {
                     chngpass(context);
+                  },
+                ),
+                new ListTile(
+                  title: new Text('Open Unity App',style: TextStyle(fontFamily: 'po',fontSize: 20),),
+                  trailing:new Icon(MdiIcons.augmentedReality),
+                  onTap: () {
+                    augmentedapp();
                   },
                 ),
                 new ListTile(
@@ -2556,6 +2694,7 @@ class device_page extends StatelessWidget
         padding: EdgeInsets.all(20),
 
         child:new MaterialButton(
+            splashColor: Colors.deepOrange,
           //            shape: new OutlineInputBorder(borderSide: BorderSide(color:Colors.white,width: 10,style: BorderStyle.solid)),
             onPressed: ()=>tv_page(context),
             child:new Column(
@@ -2581,6 +2720,7 @@ class device_page extends StatelessWidget
           padding: EdgeInsets.all(20),
 
           child:new MaterialButton(
+              splashColor: Colors.deepOrange,
               onPressed: ()=>ac_page(context),
               child:new Column(
                 children: <Widget>[
@@ -2604,6 +2744,7 @@ class device_page extends StatelessWidget
           padding: EdgeInsets.all(20),
 
           child:new MaterialButton(
+              splashColor: Colors.deepOrange,
               onPressed: ()=>fan_page(context),
               child:new Column(
                 children: <Widget>[
@@ -2629,6 +2770,7 @@ class device_page extends StatelessWidget
           padding: EdgeInsets.all(20),
 
           child:new MaterialButton(
+              splashColor: Colors.deepOrange,
               onPressed: ()=>tubelight_page(context),
               child:new Column(
                 children: <Widget>[
