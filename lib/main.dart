@@ -441,19 +441,29 @@ void  logouttap(BuildContext context) async
   session="0";
   Navigator.of(context).push(new logoutroute());
 }
-void augmentedapp()
+void augmentedapp() async
 {
   if(mode=="1")
   {
-    Fluttertoast.showToast(
-        msg: "Lanching AR app...",
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIos: 1
-    );
-    Future.delayed(const Duration(milliseconds:700), ()
+    bool isInstalled = await DeviceApps.isAppInstalled('com.scet.sahil');
+    if(isInstalled)
     {
-      DeviceApps.openApp('com.scet.sahil');
-    });
+      Fluttertoast.showToast(
+          msg: "Lanching AR app...",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIos: 1
+      );
+      Future.delayed(const Duration(milliseconds:700), ()
+      {
+        DeviceApps.openApp('com.scet.sahil');
+      });
+    }
+    else
+    {
+      Fluttertoast.showToast(msg: "Unity app is not installed");
+    }
+
+
   }
   else {
     Fluttertoast.showToast(
