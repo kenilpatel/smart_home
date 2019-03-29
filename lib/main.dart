@@ -445,7 +445,7 @@ void augmentedapp() async
 {
   if(mode=="1")
   {
-    bool isInstalled = await DeviceApps.isAppInstalled('com.scet.sahil');
+    bool isInstalled = await DeviceApps.isAppInstalled('com.dvsk.smARt');
     if(isInstalled)
     {
       Fluttertoast.showToast(
@@ -455,7 +455,7 @@ void augmentedapp() async
       );
       Future.delayed(const Duration(milliseconds:700), ()
       {
-        DeviceApps.openApp('com.scet.sahil');
+        DeviceApps.openApp('com.dvsk.smARt');
       });
     }
     else
